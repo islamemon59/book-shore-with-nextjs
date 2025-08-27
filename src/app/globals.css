@@ -1,2 +1,12 @@
 @import "tailwindcss";
 @plugin "daisyui";
+@plugin "daisyui/theme" {
+  name: "bookshore";
+  default: true;
+
+  --color-primary: #3489BD;
+  --color-secondary: #65B0D5;
+  --color-accent: #2E7A7A;
+  --color-neutral: #144D75;
+  --color-base-100: #EDF6F8;
+}
