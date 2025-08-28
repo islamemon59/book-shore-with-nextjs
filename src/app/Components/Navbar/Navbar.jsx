@@ -6,13 +6,13 @@ export default async function Navbar() {
   const isAdmin = false; // later replace with session/role check
 
   return (
-    <div className=" shadow-md">
-      <div className=" container mx-auto navbar bg-base-100 px-4 sticky top-0 z-50">
+    <div className="bg-base-100 shadow-lg">
+      <div className="container mx-auto navbar px-6 sticky top-0 z-50">
         {/* Left Section: Logo */}
         <div className="flex-1">
           <Link
             href="/"
-            className="text-2xl font-bold transition hover:text-primary"
+            className="text-3xl font-extrabold text-[#3489BD] hover:text-[#2E7A7A] transition-colors duration-300"
           >
             📚 BookShore
           </Link>
@@ -20,10 +20,10 @@ export default async function Navbar() {
 
         {/* Mobile Dropdown */}
         <div className="dropdown lg:hidden relative">
-          <div tabIndex={0} role="button" className="btn btn-ghost btn-circle">
+          <div tabIndex={0} role="button" className="btn btn-ghost btn-circle text-[#144D75]">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
+              className="h-6 w-6"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -38,16 +38,17 @@ export default async function Navbar() {
           </div>
           <ul
             tabIndex={0}
-            className="menu absolute top-11 right-0 menu-sm dropdown-content mt-3 z-[1] p-3 shadow bg-base-100 rounded-box w-full animate-fadeIn"
+            className="menu absolute top-12 right-0 menu-sm dropdown-content z-[1] p-4 shadow-xl bg-base-100 rounded-box w-52 animate-fadeIn"
           >
             <NavLinks isAdmin={isAdmin} />
+            <div className="divider my-2 bg-neutral-content h-px" />
             <UserMenu />
           </ul>
         </div>
 
         {/* Desktop Menu */}
         <div className="flex-none hidden lg:flex">
-          <ul className="menu menu-horizontal px-1 gap-2">
+          <ul className="menu menu-horizontal px-1 gap-4 items-center">
             <NavLinks isAdmin={isAdmin} />
             <UserMenu />
           </ul>

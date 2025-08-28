@@ -8,23 +8,30 @@ import { motion } from "framer-motion";
 export default function UserMenu() {
   const { data: session } = useSession();
 
+  // Define a base class for the menu items
+  const menuLinkClass = "flex items-center gap-2 p-2 rounded-lg font-medium transition-colors duration-200";
+  const hoverClass = "hover:bg-gray-100";
+  const iconColorClass = "text-[#144D75]"; // Neutral color from your palette
+
   if (!session) {
     return (
       <>
         <li>
           <Link
             href="/login"
-            className="flex items-center gap-2 transition hover:text-primary"
+            className={`${menuLinkClass} ${hoverClass} hover:text-[#3489BD]`}
           >
-            <FaSignInAlt /> Login
+            <FaSignInAlt className={iconColorClass} />
+            Login
           </Link>
         </li>
         <li>
           <Link
             href="/register"
-            className="flex items-center gap-2 transition hover:text-primary"
+            className={`${menuLinkClass} ${hoverClass} hover:text-[#3489BD]`}
           >
-            <FaUser /> Register
+            <FaUser className={iconColorClass} />
+            Register
           </Link>
         </li>
       </>
@@ -37,20 +44,22 @@ export default function UserMenu() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <li>
+      <li className="list-none">
         <Link
           href="/profile"
-          className="flex items-center gap-2 transition hover:text-primary"
+          className={`${menuLinkClass} ${hoverClass} hover:text-[#3489BD]`}
         >
-          <FaUser /> Profile
+          <FaUser className={iconColorClass} />
+          Profile
         </Link>
       </li>
-      <li>
+      <li className="list-none">
         <button
           onClick={() => signOut()}
-          className="flex items-center gap-2 transition hover:text-error"
+          className={`${menuLinkClass} ${hoverClass} hover:text-error`}
         >
-          <FaSignOutAlt /> Logout
+          <FaSignOutAlt className={iconColorClass} />
+          Logout
         </button>
       </li>
     </motion.div>
