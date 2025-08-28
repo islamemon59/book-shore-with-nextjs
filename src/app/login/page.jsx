@@ -4,9 +4,9 @@ import Link from "next/link"; // Use Next.js Link for client-side navigation
 
 export default function LoginPage() {
   return (
-    <div className="flex flex-col lg:flex-row items-center justify-center min-h-screen bg-base-100 p-8 md:p-12">
+    <div className="flex flex-col lg:flex-row items-center justify-center gap-6 min-h-screen bg-base-100 p-8 md:p-12">
       {/* Lottie Animation - Desktop Only */}
-      <div className="hidden lg:block lg:w-1/2">
+      <div className="hidden lg:block">
         <DesktopLottie />
       </div>
 
