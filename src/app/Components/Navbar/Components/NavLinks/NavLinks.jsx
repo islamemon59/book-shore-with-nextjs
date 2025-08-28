@@ -1,4 +1,3 @@
-// components/NavLinks.jsx
 import { FaHome, FaBook, FaShoppingCart, FaTachometerAlt } from "react-icons/fa";
 import Link from "next/link";
 
