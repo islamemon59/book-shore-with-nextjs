@@ -5,35 +5,111 @@ import SocialLogin from "@/app/login/Components/SocialLogin/SocialLogin";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from 'react-hot-toast';
+import { toast } from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import Swal from "sweetalert2";
 
-// 1. Define Zod schema for validation
 const registerSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters" }),
   email: z.string().email({ message: "Invalid email address" }),
-  password: z.string().min(6, { message: "Password must be at least 6 characters" }),
-  photo: z.string().url({ message: "Invalid URL" }).optional().or(z.literal('')),
+  password: z
+    .string()
+    .min(6, { message: "Password must be at least 6 characters" }),
+  photo: z.any().optional(),
 });
 
 export default function RegisterForm() {
   const [loading, setLoading] = useState(false);
-  const { register, handleSubmit, formState: { errors } } = useForm({
+  const router = useRouter();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
     resolver: zodResolver(registerSchema),
   });
 
-  const handleRegister = (data) => {
+  const handleRegister = async (data) => {
     setLoading(true);
-    // 👉 Add actual registration logic here
-    toast.success("Registration successful!");
-    setTimeout(() => setLoading(false), 2000);
+    let photoUrl = "";
+
+    try {
+      // 1. Upload the image file if it exists
+      if (data.photo && data.photo.length > 0) {
+        const imageFile = data.photo[0];
+        const formData = new FormData();
+        formData.append("image", imageFile);
+
+        const uploadResponse = await fetch(`/api/upload-image`, {
+          method: "POST",
+          body: formData,
+        });
+
+        const uploadData = await uploadResponse.json();
+
+        if (!uploadResponse.ok) {
+          toast.error(uploadData.message || "Failed to upload image.");
+          setLoading(false);
+          return;
+        }
+        photoUrl = uploadData.url;
+      }
+
+      // 2. Submit the registration data with the new photo URL
+      const registrationData = {
+        name: data.name,
+        email: data.email,
+        password: data.password,
+        photo: photoUrl || null, // Use the URL or null if no photo was uploaded
+      };
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/register`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(registrationData),
+        }
+      );
+
+      const responseData = await response.json();
+
+      if (!response.ok) {
+        if (response.status === 409) {
+          toast.error(responseData.message);
+        } else {
+          toast.error(
+            responseData.message || "Registration failed. Please try again."
+          );
+        }
+      } else {
+        await Swal.fire({
+          icon: "success",
+          title: "Registration Successful!",
+          text: "You can now log in.",
+          showConfirmButton: false,
+          timer: 2000,
+        });
+        router.push("/login");
+      }
+    } catch (error) {
+      console.error("Client-side error:", error);
+      toast.error("An unexpected error occurred.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div>
-      {/* Name, Email, Password, Photo */}
       <form onSubmit={handleSubmit(handleRegister)} className="space-y-6">
         <div>
-          <label className="block text-sm font-medium text-neutral mb-2">Name</label>
+          <label className="block text-sm font-medium text-neutral mb-2">
+            Name
+          </label>
           <input
             type="text"
             placeholder="John Doe"
@@ -48,7 +124,9 @@ export default function RegisterForm() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-neutral mb-2">Email</label>
+          <label className="block text-sm font-medium text-neutral mb-2">
+            Email
+          </label>
           <input
             type="email"
             placeholder="you@example.com"
@@ -63,7 +141,9 @@ export default function RegisterForm() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-neutral mb-2">Password</label>
+          <label className="block text-sm font-medium text-neutral mb-2">
+            Password
+          </label>
           <input
             type="password"
             placeholder="••••••••"
@@ -77,12 +157,14 @@ export default function RegisterForm() {
           )}
         </div>
 
+        {/* Changed input type to "file" and removed URL validation from schema */}
         <div>
-          <label className="block text-sm font-medium text-neutral mb-2">Photo URL</label>
+          <label className="block text-sm font-medium text-neutral mb-2">
+            Photo
+          </label>
           <input
-            type="url"
-            placeholder="https://example.com/photo.jpg"
-            className={`input input-bordered w-full transition-colors duration-200 ${
+            type="file"
+            className={`file-input file-input-bordered w-full transition-colors duration-200 ${
               errors.photo ? "input-error" : ""
             }`}
             {...register("photo")}
@@ -105,12 +187,7 @@ export default function RegisterForm() {
         </button>
       </form>
 
-      {/* Divider with improved styling */}
-      <div className="divider text-sm text-neutral-content opacity-70">
-        OR
-      </div>
-
-      {/* Social Register */}
+      <div className="divider text-sm text-neutral-content opacity-70">OR</div>
       <SocialLogin loading={loading} setLoading={setLoading} />
     </div>
   );
