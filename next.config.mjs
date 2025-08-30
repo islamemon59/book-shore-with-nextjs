@@ -6,6 +6,22 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'susan-demo.myshopify.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'baatighar.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'susan-demo.myshopify.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'pathakshamabesh.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'eboighar-static.s3.ap-southeast-1.amazonaws.com',
+      },
     ],
   },
 };

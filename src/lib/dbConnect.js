@@ -8,8 +8,6 @@ export const collectionObj = {
   paymentCollection: "paymentData"
 };
 
-// Use a global variable to store the MongoDB client promise. This prevents creating a new connection
-// on every API call.
 let clientPromise;
 
 if (!uri) {
