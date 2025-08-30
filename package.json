@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",
+    "bcryptjs": "^3.0.2",
     "framer-motion": "^12.23.12",
     "lottie-react": "^2.4.1",
     "mongodb": "^6.19.0",
