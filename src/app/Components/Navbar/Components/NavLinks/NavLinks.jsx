@@ -5,7 +5,7 @@ export default function NavLinks({ isAdmin }) {
   // Define a base class for link styling
   const linkBaseClass = "flex items-center gap-2 p-2 rounded-lg font-medium transition-colors duration-200";
   // Define classes for hover and active state
-  const linkHoverClass = "hover:bg-gray-100 hover:text-[#3489BD]";
+  const linkHoverClass = "hover:text-[#3489BD]";
   const iconColorClass = "text-[#144D75]";
 
   return (
