@@ -7,7 +7,7 @@ export async function POST(request) {
   try {
     const data = await request.json();
 
-    const { name, email, password, photo } = data;
+    const { name, email, password, image } = data;
 
     const userCollection = await dbConnect(collectionObj.userCollection);
 
@@ -26,7 +26,7 @@ export async function POST(request) {
       name,
       email,
       password: hashedPassword,
-      photo: photo || null,
+      image: image || null,
       role: "user", // Assign a default role
       createdAt: new Date(),
     };

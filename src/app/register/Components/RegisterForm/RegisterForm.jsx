@@ -54,6 +54,7 @@ export default function RegisterForm() {
           return;
         }
         photoUrl = uploadData.url;
+        console.log(photoUrl);
       }
 
       // 2. Submit the registration data with the new photo URL

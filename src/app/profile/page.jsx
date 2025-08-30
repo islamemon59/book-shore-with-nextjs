@@ -1,5 +1,3 @@
-// src/app/profile/page.jsx
-
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import Image from "next/image";
@@ -15,35 +13,56 @@ export default async function ProfilePage() {
   }
 
   const user = session?.user;
-  console.log(user);
+
+  const getInitials = (name) => {
+    if (!name) return "JD";
+    const parts = name.split(" ");
+    if (parts.length > 1) {
+      return `${parts[0].charAt(0)}${parts[1].charAt(0)}`.toUpperCase();
+    }
+    return parts[0].charAt(0).toUpperCase();
+  };
+
+  const userInitials = getInitials(user?.name);
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center p-4 bg-gray-50 overflow-hidden">
-      {/* Dynamic Background Circles */}
-      <div className="absolute w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-60 animate-blob top-16 left-1/4"></div>
-      <div className="absolute w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl opacity-60 animate-blob animation-delay-2000 bottom-16 right-1/4"></div>
+    <div className="relative min-h-screen flex flex-col items-center justify-center p-4 bg-base-100 overflow-hidden">
+      {/* Profile Card */}
+      <div className="relative z-10 w-full max-w-sm backdrop-blur-md bg-white/90 rounded-3xl shadow-xl hover:shadow-2xl transition-shadow duration-300 border border-neutral/20">
+        <div className="flex flex-col items-center p-8 pt-16">
+          {/* User Image or Initials */}
+          <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-primary shadow-lg -mt-10 mb-4 bg-neutral flex items-center justify-center text-4xl font-bold text-base-100">
+            {user?.image ? (
+              <Image
+                src={user.image}
+                alt="User Avatar"
+                fill
+                className="object-cover"
+              />
+            ) : (
+              <span>{userInitials}</span>
+            )}
+          </div>
 
-      {/* Glassmorphism Card */}
-      <div className="relative z-10 w-full max-w-sm overflow-hidden bg-white/70 backdrop-filter backdrop-blur-lg rounded-3xl shadow-2xl transition-all duration-500 hover:scale-105">
-        <figure className="relative h-48 w-full">
-          <Image
-            src={user?.image || "https://i.ibb.co/68qJj2h/user-1.webp"}
-            alt="User Avatar"
-            fill
-            className="object-cover"
-          />
-        </figure>
-        <div className="p-8 text-center text-gray-900">
-          <h2 className="text-3xl font-extrabold tracking-wide mb-2">
-            {user?.name}
+          {/* User Name and Email */}
+          <h2 className="text-3xl font-extrabold tracking-wide mb-1 text-primary">
+            {user?.name || "User Name"}
           </h2>
-          <p className="text-sm font-light text-gray-500 mb-6">{user?.email}</p>
-          <div className="flex flex-col space-y-4">
-            <UpdateProfileButton />
-            <LogoutButton />
+          <p className="text-sm font-light text-secondary mb-6">
+            {user?.email || "user@example.com"}
+          </p>
+
+          {/* Action Buttons */}
+          <div className="w-full space-y-4">
+            <UpdateProfileButton className="w-full bg-primary hover:bg-secondary text-base-100 font-semibold rounded-xl py-2 shadow-md transition-all duration-200" />
+            <LogoutButton className="w-full bg-accent hover:bg-neutral text-base-100 font-semibold rounded-xl py-2 shadow-md transition-all duration-200" />
           </div>
         </div>
       </div>
+
+      {/* Floating color accents */}
+      <div className="absolute top-24 left-24 w-60 h-60 bg-secondary rounded-full opacity-30 blur-3xl animate-pulse"></div>
+      <div className="absolute bottom-24 right-24 w-72 h-72 bg-primary rounded-full opacity-25 blur-3xl animate-pulse"></div>
     </div>
   );
 }
