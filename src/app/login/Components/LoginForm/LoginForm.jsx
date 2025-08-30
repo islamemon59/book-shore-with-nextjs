@@ -6,7 +6,10 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { toast } from "react-hot-toast";
+import { toast } from "react-hot-toast"; // You can remove this import if no longer used
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import Swal from "sweetalert2"; // Import SweetAlert2
 
 // 1. Define Zod schema for validation
 const loginSchema = z.object({
@@ -18,6 +21,8 @@ const loginSchema = z.object({
 
 export default function LoginForm() {
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
   const {
     register,
     handleSubmit,
@@ -26,11 +31,37 @@ export default function LoginForm() {
     resolver: zodResolver(loginSchema),
   });
 
-  const handleLogin = (data) => {
+  const handleLogin = async (data) => {
     setLoading(true);
-    // 👉 Add actual authentication logic here
-    toast.success("Login successful!");
-    setTimeout(() => setLoading(false), 2000);
+
+    try {
+      const result = await signIn("credentials", {
+        redirect: false,
+        email: data.email,
+        password: data.password,
+      });
+
+      if (result?.error) {
+        // Use react-hot-toast for errors as it's non-blocking
+        toast.error("Invalid email or password.");
+        setLoading(false);
+      } else {
+        // Use SweetAlert for successful login
+        await Swal.fire({
+          icon: "success",
+          title: "Login Successful!",
+          text: "Redirecting to your dashboard...",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+
+        router.push("/");
+      }
+    } catch (error) {
+      console.error("Login failed:", error);
+      toast.error("An unexpected error occurred. Please try again.");
+      setLoading(false);
+    }
   };
 
   return (
