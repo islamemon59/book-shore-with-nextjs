@@ -1,3 +1,5 @@
+// Corrected authOptions.js file
+
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import { compare } from "bcryptjs";
@@ -15,7 +17,6 @@ export const authOptions = {
         const userCollection = await dbConnect(collectionObj.userCollection);
         const user = await userCollection.findOne({ email: credentials.email });
 
-        // If user does not exist, throw a specific error
         if (!user) {
           throw new Error(
             "No user found with this email. Please register first."
@@ -31,6 +32,7 @@ export const authOptions = {
           id: user._id,
           name: user.name,
           email: user.email,
+          image: user.image, // Ensure the image field is correctly returned
           role: user.role || "user",
         };
       },
@@ -52,33 +54,37 @@ export const authOptions = {
             email: user.email,
           });
 
-          // If the user does not exist in the database, insert them
           if (!existingUser) {
             await userCollection.insertOne({
               name: user.name,
               email: user.email,
               image: user.image,
-              role: "user", // Set default role
+              role: "user",
               createdAt: new Date(),
             });
           }
         }
-        return true; // Allow sign-in for all valid users
+        return true;
       } catch (err) {
         console.error("Error in signIn callback:", err);
-        return false; // Block sign-in on error
+        return false;
       }
     },
     async jwt({ token, user }) {
+      // If a user object exists (i.e., this is the sign-in),
+      // add the user's properties to the token.
       if (user) {
         token.id = user.id;
         token.role = user.role;
+        token.image = user.image; // Pass the image URL from the user to the token
       }
       return token;
     },
     async session({ session, token }) {
+      // Always add properties from the token to the session object
       session.user.id = token.id;
       session.user.role = token.role;
+      session.user.image = token.image; // Pass the image URL from the token to the session
       return session;
     },
   },

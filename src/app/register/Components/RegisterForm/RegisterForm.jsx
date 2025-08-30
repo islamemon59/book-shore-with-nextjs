@@ -61,7 +61,7 @@ export default function RegisterForm() {
         name: data.name,
         email: data.email,
         password: data.password,
-        photo: photoUrl || null, // Use the URL or null if no photo was uploaded
+        image: photoUrl || null, // Use the URL or null if no photo was uploaded
       };
 
       const response = await fetch(
