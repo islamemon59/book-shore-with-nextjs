@@ -24,7 +24,7 @@ const HoverIcons = ({book}) => {
         </div>
       </Link>
       {/* View Details Icon Button */}
-      <Link href={`/book/${book._id}`} passHref>
+      <Link href={`/books/${book._id}`} passHref>
         <div className="bg-base-100 p-3 rounded-full shadow-md hover:bg-base-100 transition-all duration-200">
           <FaEye
             className="text-primary text-2xl cursor-pointer"
