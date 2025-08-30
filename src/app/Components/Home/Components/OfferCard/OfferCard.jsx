@@ -55,7 +55,9 @@ export default function OfferCards() {
                 {offer.title}
               </h3>
               <p className="text-[#144D75] mb-3">{offer.subtitle}</p>
-              <p className="text-xl font-extrabold text-[#2E7A7A]">{offer.price}</p>
+              <p className="text-xl font-extrabold text-[#2E7A7A]">
+                {offer.price}
+              </p>
             </div>
           </Link>
         ))}
