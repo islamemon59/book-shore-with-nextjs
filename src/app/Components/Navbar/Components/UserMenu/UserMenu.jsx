@@ -30,7 +30,7 @@ export default function UserMenu() {
         <li>
           <Link
             href="/login"
-            className={`${menuLinkClass} ${hoverClass} hover:text-[#3489BD]`}
+            className={`${menuLinkClass} ${hoverClass} hover:text-[#3489BD] hover:bg-gray-200`}
           >
             <FaSignInAlt className={iconColorClass} />
             Login
