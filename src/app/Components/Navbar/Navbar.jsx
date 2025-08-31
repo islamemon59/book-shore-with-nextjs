@@ -52,7 +52,7 @@ export default async function Navbar() {
 
         {/* Desktop Menu */}
         <div className="flex-none hidden lg:flex">
-          <ul className="menu menu-horizontal px-1 gap-4 items-center">
+          <ul className="menu-horizontal px-1 gap-4 items-center">
             <NavLinks isAdmin={isAdmin} />
             <UserMenu />
           </ul>

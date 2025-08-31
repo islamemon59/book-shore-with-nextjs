@@ -3,10 +3,10 @@ import Link from "next/link";
 
 export default function NavLinks({ isAdmin }) {
   // Define a base class for link styling
-  const linkBaseClass = "flex items-center gap-2 p-2 rounded-lg font-medium transition-colors duration-200";
+  const linkBaseClass = "flex group items-center gap-2 p-2 rounded-lg font-medium transition-colors duration-200";
   // Define classes for hover and active state
-  const linkHoverClass = "hover:text-[#3489BD]";
-  const iconColorClass = "text-[#144D75]";
+  const linkHoverClass = " hover:bg-secondary hover:text-base-100";
+  const iconColorClass = "text-[#144D75] group-hover:text-base-100";
 
   return (
     <>

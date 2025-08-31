@@ -15,7 +15,7 @@ export default async function ProfilePage() {
   const user = session?.user;
 
   const getInitials = (name) => {
-    if (!name) return "JD";
+    if (!name) return "";
     const parts = name.split(" ");
     if (parts.length > 1) {
       return `${parts[0].charAt(0)}${parts[1].charAt(0)}`.toUpperCase();
