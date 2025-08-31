@@ -20,7 +20,11 @@ export default async function Navbar() {
 
         {/* Mobile Dropdown */}
         <div className="dropdown lg:hidden relative">
-          <div tabIndex={0} role="button" className="btn btn-ghost btn-circle text-[#144D75]">
+          <div
+            tabIndex={0}
+            role="button"
+            className="btn btn-ghost btn-circle text-[#144D75]"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-6 w-6"
