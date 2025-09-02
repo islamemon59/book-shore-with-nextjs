@@ -1,13 +1,13 @@
-import Sidebar from './Components/Sidebar/Sidebar';
+import Sidebar from "./Components/Sidebar/Sidebar";
 
 const DashboardLayout = ({ children, pathname }) => {
   const navLinks = [
-    { name: 'Home', href: '/' },
-    { name: 'List of all books', href: '/books' },
-    { name: 'Add New Book', href: '/books/add' },
-    { name: 'View list of all orders', href: '/orders' },
-    { name: 'Order details', href: '/orders/details' },
-    { name: 'Update order status', href: '/orders/update-status' },
+    { name: "Home", href: "/" },
+    { name: "List of all books", href: "/books" },
+    { name: "Add New Book", href: "/books/add" },
+    { name: "View list of all orders", href: "/orders" },
+    { name: "Order details", href: "/orders/details" },
+    { name: "Update order status", href: "/orders/update-status" },
   ];
 
   return (
@@ -16,13 +16,9 @@ const DashboardLayout = ({ children, pathname }) => {
       <Sidebar navLinks={navLinks} pathname={pathname} />
 
       {/* Main content area */}
-      <div className="flex-1 p-6 md:p-8 overflow-y-auto">
-        
-        {/* Main content area with a card-like appearance */}
-        <main className="w-full h-full p-6 md:p-8 bg-base-100 rounded-2xl shadow-xl">
-          {children}
-        </main>
-      </div>
+      <main className=" flex-1 p-6 md:p-8 overflow-y-auto">
+        {children}
+      </main>
     </div>
   );
 };
