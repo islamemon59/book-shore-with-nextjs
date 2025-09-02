@@ -1,8 +1,5 @@
-import { FaFileAlt } from 'react-icons/fa';
 import Sidebar from './Components/Sidebar/Sidebar';
 
-// This is a server component that handles the overall dashboard layout.
-// It will dynamically render the child component based on the URL.
 const DashboardLayout = ({ children, pathname }) => {
   const navLinks = [
     { name: 'Home', href: '/' },

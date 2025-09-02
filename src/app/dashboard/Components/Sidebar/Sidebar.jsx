@@ -17,7 +17,7 @@ import Link from "next/link";
 const Sidebar = ({ navLinks, pathname }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  // Use an object to map link names to icons for cleaner code.
+  // Icon mapping
   const iconMap = {
     Home: <FaHome className="w-5 h-5" />,
     "List of all books": <FaBook className="w-5 h-5" />,
@@ -32,10 +32,10 @@ const Sidebar = ({ navLinks, pathname }) => {
       {/* Mobile Sidebar Toggle Button */}
       <button
         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-        className="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-full bg-base-100 shadow-md transition-all duration-300 hover:bg-base-200 hover:scale-105"
+        className="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-full bg-base-100 shadow-md transition-all duration-300 hover:bg-secondary hover:scale-105"
         aria-label="Toggle Sidebar"
       >
-        <FaBars className="w-6 h-6" />
+        <FaBars className="w-6 h-6 text-neutral" />
       </button>
 
       {/* Sidebar Overlay (Mobile) */}
@@ -48,39 +48,46 @@ const Sidebar = ({ navLinks, pathname }) => {
 
       {/* Sidebar Content */}
       <aside
-        className={`fixed lg:static inset-y-0 left-0 w-72 bg-base-100 p-8 shadow-2xl rounded-tr-3xl rounded-br-3xl lg:rounded-none lg:shadow-none z-50 transition-transform duration-300 transform ${
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
-        }`}
+        className={`fixed lg:static inset-y-0 left-0 w-72 
+  bg-neutral/95 backdrop-blur-md text-base-100 
+  p-8 shadow-xl rounded-tr-3xl rounded-br-3xl 
+  lg:rounded-none lg:shadow-none z-50 transition-transform 
+  duration-300 transform ${
+    isSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+  }`}
       >
         <div className="flex flex-col h-full">
-          {/* Dashboard Header */}
+          {/* Header */}
           <div className="flex items-center justify-between mb-8">
-            <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
+            <Link
+              href="/"
+              className="text-3xl font-bold tracking-tight bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent"
+            >
               BookShore
-            </h1>
+            </Link>
             <button
               onClick={() => setIsSidebarOpen(false)}
               className="lg:hidden btn btn-sm btn-ghost"
               aria-label="Close Sidebar"
             >
-              <FaTimes className="w-6 h-6" />
+              <FaTimes className="w-6 h-6 text-base-100" />
             </button>
           </div>
 
-          {/* Admin profile */}
+          {/* Profile */}
           <Profile />
 
-          {/* Navigation Links */}
-          <nav className="flex-1 overflow-y-auto">
+          {/* Nav */}
+          <nav className="flex-1 overflow-y-auto mt-4">
             <ul className="menu space-y-2">
               {navLinks.map((link) => (
                 <li key={link.name} className="relative">
                   <Link
                     href={link.href}
-                    className={`flex items-center gap-3 p-3 rounded-lg transition-colors duration-300 hover:bg-base-300 ${
+                    className={`flex items-center font-semibold gap-3 p-3 rounded-lg text-[16px] transition-colors duration-300 ${
                       pathname === link.href
-                        ? "bg-primary text-primary-content font-bold shadow-md"
-                        : ""
+                        ? "bg-primary text-white shadow-md"
+                        : "hover:bg-secondary hover:text-white"
                     }`}
                     onClick={() => setIsSidebarOpen(false)}
                   >
@@ -88,7 +95,7 @@ const Sidebar = ({ navLinks, pathname }) => {
                     {link.name}
                   </Link>
                   {pathname === link.href && (
-                    <span className="absolute left-0 top-0 w-1 h-full bg-secondary rounded-full transition-all duration-300 transform scale-y-0 lg:scale-y-100" />
+                    <span className="absolute left-0 top-0 w-1 h-full bg-accent rounded-full" />
                   )}
                 </li>
               ))}
