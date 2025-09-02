@@ -3,7 +3,7 @@ import NavLinks from "./Components/NavLinks/NavLinks";
 import UserMenu from "./Components/UserMenu/UserMenu";
 
 export default async function Navbar() {
-  const isAdmin = false; // later replace with session/role check
+  const isAdmin = true; // later replace with session/role check
 
   return (
     <div className="bg-base-100 shadow-lg">
