@@ -4,7 +4,7 @@ const DashboardLayout = ({ children, pathname }) => {
   const navLinks = [
     { name: "Home", href: "/" },
     { name: "List of all books", href: "/books" },
-    { name: "Add New Book", href: "/books/add" },
+    { name: "Add New Book", href: "/dashboard/addProduct" },
     { name: "View list of all orders", href: "/orders" },
     { name: "Order details", href: "/orders/details" },
     { name: "Update order status", href: "/orders/update-status" },
