@@ -17,7 +17,6 @@ import {
   Lightbulb,
   Plane,
   Laugh,
-  HeartHandshake,
   Users,
   AlertTriangle,
   BookMarked,
@@ -69,17 +68,21 @@ export default async function GenrePage() {
         </div>
       </h2>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6 md:gap-8">
         {genres.map((g) => {
           const Icon = genreIcons[g._id] || BookOpen; // fallback icon
           return (
             <Link
               key={g._id}
               href={`/books?genre=${g._id}`}
-              className="group flex flex-col items-center justify-center bg-white border border-gray-200 rounded-2xl shadow hover:shadow-lg p-6 transition-transform transform hover:scale-105 hover:bg-primary hover:text-white"
+              className="group flex flex-col items-center justify-center p-6 bg-base-200 rounded-2xl shadow-lg border-2 border-transparent hover:border-primary transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl"
             >
-              <Icon className="w-10 h-10 mb-3 text-primary group-hover:text-white transition-colors" />
-              <p className="text-lg font-semibold text-center">{g._id}</p>
+              <div className="p-4 rounded-full bg-primary/20 group-hover:bg-primary transition-colors duration-300">
+                <Icon className="w-8 h-8 text-primary group-hover:text-white transition-colors duration-300" />
+              </div>
+              <p className="mt-4 text-center text-neutral font-semibold text-base md:text-lg group-hover:text-primary transition-colors duration-300">
+                {g._id}
+              </p>
             </Link>
           );
         })}

@@ -24,7 +24,7 @@ export default async function FeaturedBooksSection() {
       </h2>
 
       {/* Books Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6 md:gap-8">
         {featuredBooks.map((book) => {
           const discountedPrice =
             book.discount && book.discount > 0
@@ -35,7 +35,7 @@ export default async function FeaturedBooksSection() {
             <Link
               key={book._id}
               href={`/books/${book._id}`}
-              className="group relative bg-base-100 border border-gray-200 rounded-2xl shadow-md hover:shadow-xl p-4 flex flex-col justify-between transition-transform transform hover:scale-105"
+              className="group relative flex flex-col items-center p-4 bg-base-100 rounded-3xl shadow-xl transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl"
             >
               {/* Discount Badge */}
               {book.discount > 0 && (
@@ -44,9 +44,9 @@ export default async function FeaturedBooksSection() {
                 </span>
               )}
 
-              <div className="flex flex-col items-center">
+              <div className="flex flex-col items-center w-full">
                 {/* Book Cover */}
-                <div className="relative w-36 h-48 mb-3 rounded-lg overflow-hidden shadow-sm">
+                <div className="relative w-full h-60 md:h-72 mb-4 rounded-xl overflow-hidden shadow-lg border border-gray-200">
                   <Image
                     src={book.imageURL}
                     alt={book.title}
@@ -57,27 +57,29 @@ export default async function FeaturedBooksSection() {
                 </div>
 
                 {/* Book Title */}
-                <p className="text-center font-semibold text-lg text-primary group-hover:text-secondary transition-colors">
+                <p className="text-center font-bold text-lg text-neutral truncate w-full mb-1">
                   {book.title}
                 </p>
 
                 {/* Author */}
-                <p className="text-sm text-gray-500 mb-2">{book.author}</p>
+                <p className="text-sm text-neutral opacity-70 mb-2">
+                  {book.author}
+                </p>
               </div>
 
               {/* Price at the bottom */}
-              <div className="flex items-center gap-2 mt-3 justify-center">
+              <div className="flex items-center gap-2 mt-auto">
                 {discountedPrice ? (
                   <>
-                    <span className="text-sm text-gray-400 line-through">
+                    <span className="text-sm text-neutral opacity-50 line-through">
                       ${book.price.toFixed(2)}
                     </span>
-                    <span className="text-primary font-bold">
+                    <span className="text-secondary font-bold text-lg">
                       ${discountedPrice.toFixed(2)}
                     </span>
                   </>
                 ) : (
-                  <span className="text-primary font-bold">
+                  <span className="text-secondary font-bold text-lg">
                     ${book.price.toFixed(2)}
                   </span>
                 )}
