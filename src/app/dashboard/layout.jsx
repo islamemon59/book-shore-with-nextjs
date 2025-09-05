@@ -3,7 +3,7 @@ import Sidebar from "./Components/Sidebar/Sidebar";
 const DashboardLayout = ({ children, pathname }) => {
   const navLinks = [
     { name: "Home", href: "/" },
-    { name: "List of all books", href: "/books" },
+    { name: "List of all books", href: "/dashboard/allbooks" },
     { name: "Add New Book", href: "/dashboard/addProduct" },
     { name: "View list of all orders", href: "/orders" },
     { name: "Order details", href: "/orders/details" },
