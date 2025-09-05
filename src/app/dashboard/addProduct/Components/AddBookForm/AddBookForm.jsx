@@ -51,6 +51,7 @@ const AddBookForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log(formData);
     setLoading(true);
 
     try {
@@ -79,7 +80,7 @@ const AddBookForm = () => {
           price: "",
           discount: "",
           genre: "",
-          coverImage: "",
+          imageURL: "",
         });
       } else {
         toast.error(data.error || "Something went wrong");

@@ -25,7 +25,7 @@ export async function GET(request) {
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { title, author, description, price, discount, genre, coverImage } =
+    const { title, author, description, price, discount, genre, imageURL } =
       body;
     const booksCollection = await dbConnect(collectionObj.booksCollection);
     const newBook = {
@@ -35,7 +35,7 @@ export async function POST(request) {
       price: Number(price),
       discount: Number(discount),
       genre,
-      coverImage,
+      imageURL,
     };
     const result = await booksCollection.insertOne(newBook);
     return NextResponse.json({ success: true, insertedId: result.insertedId });
