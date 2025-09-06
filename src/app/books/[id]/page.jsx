@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import BookDetails from './Components/BookDetails/BookDetails';
 
 export default async function BookDetailsPage({ params }) {
-  const { id } = params;
+  const { id } = await params;
 
   let book = null;
   try {
