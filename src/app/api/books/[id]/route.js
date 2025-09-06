@@ -62,3 +62,58 @@ export async function DELETE(req, { params }) {
     message: "Book deleted successfully",
   });
 }
+
+
+
+
+export async function PUT(req, { params }) {
+  try {
+    // 1️⃣ Check user session
+    const session = await getServerSession(authOptions);
+
+    if (!session) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // 2️⃣ Check admin role
+    if (session.user.role !== "admin") {
+      return NextResponse.json(
+        { error: "Forbidden: Admins only" },
+        { status: 403 }
+      );
+    }
+
+    // 3️⃣ Connect to DB
+    const booksCollection = await dbConnect(collectionObj.booksCollection);
+
+    // 4️⃣ Validate ID
+    const { id } = params;
+    if (!ObjectId.isValid(id)) {
+      return NextResponse.json({ error: "Invalid book ID" }, { status: 400 });
+    }
+
+    // 5️⃣ Parse request body
+    const body = await req.json();
+
+    // 6️⃣ Update book
+    const result = await booksCollection.updateOne(
+      { _id: new ObjectId(id) },
+      { $set: body }
+    );
+
+    if (result.matchedCount === 0) {
+      return NextResponse.json({ error: "Book not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: "Book updated successfully",
+    });
+  } catch (error) {
+    console.error("Error updating book:", error);
+    return NextResponse.json(
+      { error: "Error updating book", details: error.message },
+      { status: 500 }
+    );
+  }
+}

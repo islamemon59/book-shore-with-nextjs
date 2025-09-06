@@ -2,11 +2,11 @@
 import { FaEdit, FaTrash } from "react-icons/fa";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function ActionButtons({ id }) {
   const router = useRouter();
 
-  // Delete handler
   const handleDelete = async () => {
     const confirm = await Swal.fire({
       title: "Are you sure?",
@@ -23,7 +23,7 @@ export default function ActionButtons({ id }) {
 
         if (res.ok) {
           Swal.fire("Deleted!", "The book has been removed.", "success");
-          router.refresh(); // reload data from server
+          router.refresh();
         } else {
           Swal.fire("Error!", "Failed to delete book.", "error");
         }
@@ -34,20 +34,12 @@ export default function ActionButtons({ id }) {
     }
   };
 
-  // Update handler
-  const handleUpdate = () => {
-    router.push(`/dashboard/books/update/${id}`);
-  };
-
   return (
     <div className="flex gap-2">
-      <button
-        onClick={handleUpdate}
-        className="flex items-center gap-2 px-4 py-2 text-info transition-all duration-300 hover:bg-info hover:text-info-content rounded-xl shadow-md hover:shadow-lg"
-      >
+      <Link href={`/dashboard/updateBook/${id}`} className="flex items-center gap-2 px-4 py-2 text-info transition-all duration-300 hover:bg-info hover:text-info-content rounded-xl shadow-md hover:shadow-lg">
         <FaEdit />
         <span className="font-medium">Edit</span>
-      </button>
+      </Link>
       <button
         onClick={handleDelete}
         className="flex items-center gap-2 px-4 py-2 text-error transition-all duration-300 hover:bg-error hover:text-error-content rounded-xl shadow-md hover:shadow-lg"
