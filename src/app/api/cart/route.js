@@ -72,3 +72,19 @@ export async function POST(req) {
     );
   }
 }
+
+export async function GET() {
+  const session = await getServerSession(authOptions);
+  console.log("checking session",session);
+
+  if (!session) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const cartCollection = await dbConnect(collectionObj.cartDataCollection);
+  const cartItems = await cartCollection
+    .find({ userEmail: session?.user?.email })
+    .toArray();
+
+  return NextResponse.json(cartItems);
+}
