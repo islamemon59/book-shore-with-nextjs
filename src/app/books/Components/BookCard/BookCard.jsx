@@ -1,6 +1,5 @@
 import Image from "next/image";
-import HoverIcons from "../HoverIcons/HoverIcons";
-import Link from "next/link";
+import ActionButtons from "../ActionsButtons/ActionButtons";
 export default function BookCard({ book }) {
   // Calculate final price based on discount
   const finalPrice = book.price - (book.price * book.discount) / 100;
@@ -24,7 +23,7 @@ export default function BookCard({ book }) {
         )}
 
         {/* Hover Icons Overlay - Now with individual button backgrounds */}
-        <HoverIcons book={book} />
+        <ActionButtons book={book} />
       </div>
 
       {/* Content Section */}

@@ -1,4 +1,6 @@
+import { authOptions } from "@/lib/authOptions";
 import { collectionObj, dbConnect } from "@/lib/dbConnect";
+import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
 export async function GET(request) {
@@ -24,6 +26,10 @@ export async function GET(request) {
 
 export async function POST(request) {
   try {
+    const session = await getServerSession(authOptions);
+    if (!session) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
     const body = await request.json();
     const { title, author, description, price, discount, genre, imageURL } =
       body;

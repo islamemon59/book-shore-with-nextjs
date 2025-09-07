@@ -1,12 +1,14 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/authOptions";
 import { collectionObj, dbConnect } from "@/lib/dbConnect";
+import { authOptions } from "@/lib/authOptions";
+
 
 export async function POST(req) {
   try {
     // 1. Check user session
     const session = await getServerSession(authOptions);
+    console.log(session);
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -74,17 +76,14 @@ export async function POST(req) {
 }
 
 export async function GET() {
-  const session = await getServerSession(authOptions);
-  console.log("checking session",session);
-
-  if (!session) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
+  const session = await getServerSession(authOptions)
+    console.log(session);
+    if (!session) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+  console.log("session user email",user);
   const cartCollection = await dbConnect(collectionObj.cartDataCollection);
-  const cartItems = await cartCollection
-    .find({ userEmail: session?.user?.email })
-    .toArray();
+  const cartItems = await cartCollection.find({ userEmail: session.user.email }).toArray();
 
   return NextResponse.json(cartItems);
 }
