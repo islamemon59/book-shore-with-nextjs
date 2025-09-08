@@ -1,144 +1,197 @@
 "use client";
+import { useState, useMemo } from "react";
 import Image from "next/image";
-import { useState } from "react";
-import Swal from "sweetalert2";
 import Link from "next/link";
+import Swal from "sweetalert2";
+
+// React Icons
+import {
+  MdAdd,
+  MdRemove,
+  MdClose,
+  MdLocalShipping,
+  MdDiscount,
+  MdAttachMoney,
+  MdCreditCard,
+} from "react-icons/md";
 
 export default function CartTable({ items }) {
   const [cart, setCart] = useState(items);
+  const shipping = 5.99; // Mock shipping
+  const taxRate = 0.08; // 8% tax
 
+  // Subtotal
+  const subtotal = useMemo(
+    () => cart.reduce((sum, item) => sum + item.price * item.quantity, 0),
+    [cart]
+  );
+
+  // Total = subtotal + shipping + tax
+  const total = useMemo(
+    () => subtotal + shipping + subtotal * taxRate,
+    [subtotal]
+  );
+
+  // Delete handler
   const handleDelete = async (id) => {
-    const res = await fetch(`/api/cart/${id}`, { method: "DELETE" });
-    if (res.ok) {
-      setCart(cart.filter((item) => item._id !== id));
-      Swal.fire("Deleted!", "Item removed from cart.", "success");
-    } else {
-      Swal.fire("Error", "Failed to remove item.", "error");
-    }
+    setCart(cart.filter((item) => item._id !== id));
+    Swal.fire("Deleted!", "Item removed from cart.", "success");
   };
 
+  // Quantity update
   const handleUpdate = async (id, change) => {
-    const res = await fetch(`/api/cart/${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ change }),
-    });
-
-    if (res.ok) {
-      const updated = await res.json();
-      if (updated.removed) {
-        setCart(cart.filter((item) => item._id !== id));
-      } else {
-        setCart(
-          cart.map((item) =>
-            item._id === id
-              ? { ...item, quantity: item.quantity + change }
-              : item
-          )
-        );
-      }
-    } else {
-      Swal.fire("Error", "Failed to update quantity.", "error");
-    }
+    setCart(
+      cart.map((item) =>
+        item._id === id
+          ? { ...item, quantity: Math.max(1, item.quantity + change) }
+          : item
+      )
+    );
   };
 
   return (
-    <div className="overflow-x-auto bg-base-200 shadow-xl rounded-xl p-4">
-      {cart.length === 0 ? (
-        <div className="text-center py-16">
-          <h2 className="text-2xl font-bold text-neutral">
-            🛒 Your cart is empty
-          </h2>
-          <p className="text-base text-neutral mt-2">
-            Start adding books to see them here.
-          </p>
-          <Link
-            href="/books"
-            className="mt-6 btn btn-primary rounded"
-          >
-            Continue Shopping
-          </Link>
-        </div>
-      ) : (
-        <table className="table w-full bg-base-100 rounded-lg">
-          <thead className="bg-primary text-white sticky top-0">
-            <tr>
-              <th className="p-4">Cover</th>
-              <th>Title</th>
-              <th>Qty</th>
-              <th>Price</th>
-              <th>Total</th>
-              <th className="text-center p-4">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {cart.map((item) => (
-              <tr
-                key={item._id}
-                className="hover:bg-base-200/70 transition-colors duration-200"
-              >
-                {/* Cover */}
-                <td>
-                  <div className="relative w-16 h-20 rounded-md overflow-hidden shadow-md ring-1 ring-base-300">
+    <div className="min-h-screen bg-[var(--color-base-100)] flex items-center justify-center p-4">
+      <div className="w-full max-w-7xl bg-white rounded-3xl p-8 shadow-2xl">
+        <h1 className="text-3xl font-bold text-[var(--color-neutral)] mb-8">
+          Shopping Cart
+        </h1>
+
+        {cart.length === 0 ? (
+          <div className="text-center py-20 text-[var(--color-neutral)]">
+            <h2 className="text-4xl font-extrabold mb-4">
+              🛒 Your cart is empty
+            </h2>
+            <p className="text-lg font-light mb-6">
+              Looks like you haven't added anything yet.
+            </p>
+            <Link
+              href="/books"
+              className="mt-6 btn btn-lg bg-[var(--color-primary)] text-white rounded-full border-none shadow-lg hover:scale-105 hover:shadow-xl transition"
+            >
+              Start Shopping
+            </Link>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Cart Items */}
+            <div className="md:col-span-2 space-y-6">
+              {cart.map((item) => (
+                <div
+                  key={item._id}
+                  className="flex flex-col md:flex-row items-center bg-[var(--color-base-100)] rounded-2xl p-4 shadow-sm hover:shadow-lg transition"
+                >
+                  {/* Book Image */}
+                  <div className="relative w-full h-40 md:w-32 md:h-32 mb-4 md:mb-0 md:mr-6">
                     <Image
                       src={item.imageURL}
                       alt={item.title}
                       fill
-                      className="object-cover"
-                      sizes="64px"
+                      className="rounded-lg shadow-md object-cover"
                     />
                   </div>
-                </td>
 
-                {/* Title */}
-                <td className="font-semibold text-base text-neutral-content">
-                  {item.title}
-                </td>
+                  {/* Info & Actions */}
+                  <div className="flex-grow flex flex-col md:flex-row items-center justify-between w-full">
+                    {/* Title */}
+                    <div className="text-center md:text-left mb-4 md:mb-0">
+                      <h3 className="text-lg font-semibold text-[var(--color-neutral)]">
+                        {item.title}
+                      </h3>
+                      <p className="text-sm text-gray-500 mt-1">
+                        Price: ${item.price.toFixed(2)}
+                      </p>
+                    </div>
 
-                {/* Quantity */}
-                <td>
-                  <div className="flex items-center gap-2">
-                    <button
-                      className="btn btn-xs btn-outline"
-                      onClick={() => handleUpdate(item._id, -1)}
-                      disabled={item.quantity <= 1}
-                    >
-                      -
-                    </button>
-                    <span className="text-base font-medium">{item.quantity}</span>
-                    <button
-                      className="btn btn-xs btn-outline"
-                      onClick={() => handleUpdate(item._id, 1)}
-                    >
-                      +
-                    </button>
+                    {/* Quantity & Total */}
+                    <div className="flex items-center gap-4">
+                      <div className="flex items-center space-x-2 bg-white rounded-full p-1 shadow">
+                        <button
+                          className="btn btn-sm btn-circle text-[var(--color-neutral)] hover:bg-[var(--color-secondary)] hover:text-white"
+                          onClick={() => handleUpdate(item._id, -1)}
+                          disabled={item.quantity <= 1}
+                        >
+                          <MdRemove />
+                        </button>
+                        <span className="font-bold text-[var(--color-neutral)] w-6 text-center">
+                          {item.quantity}
+                        </span>
+                        <button
+                          className="btn btn-sm btn-circle text-[var(--color-neutral)] hover:bg-[var(--color-secondary)] hover:text-white"
+                          onClick={() => handleUpdate(item._id, 1)}
+                        >
+                          <MdAdd />
+                        </button>
+                      </div>
+                      <span className="text-lg font-bold text-[var(--color-accent)] min-w-[70px] text-right">
+                        ${(item.price * item.quantity).toFixed(2)}
+                      </span>
+                      <button
+                        onClick={() => handleDelete(item._id)}
+                        className="btn btn-sm btn-circle bg-red-500 text-white border-none hover:scale-110 transition"
+                      >
+                        <MdClose />
+                      </button>
+                    </div>
                   </div>
-                </td>
+                </div>
+              ))}
+            </div>
 
-                {/* Price */}
-                <td className="text-base text-neutral-content">
-                  ${item.price.toFixed(2)}
-                </td>
+            {/* Order Summary */}
+            <div className="md:col-span-1">
+              <div className="bg-[var(--color-secondary)] text-white rounded-3xl p-8 shadow-xl sticky top-8">
+                <h3 className="text-2xl font-bold mb-6 border-b pb-4 border-white/40">
+                  Order Summary
+                </h3>
 
-                {/* Total */}
-                <td className="text-base font-bold text-secondary">
-                  ${(item.price * item.quantity).toFixed(2)}
-                </td>
+                <div className="space-y-4">
+                  <div className="flex justify-between">
+                    <span className="flex items-center gap-2">
+                      <MdAttachMoney /> Subtotal
+                    </span>
+                    <span className="font-semibold">
+                      ${subtotal.toFixed(2)}
+                    </span>
+                  </div>
 
-                {/* Actions */}
-                <td className="text-center">
-                  <button
-                    onClick={() => handleDelete(item._id)}
-                    className="btn btn-xs btn-error"
-                  >
-                    Remove
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+                  <div className="flex justify-between">
+                    <span className="flex items-center gap-2">
+                      <MdLocalShipping /> Shipping
+                    </span>
+                    <span className="font-semibold">
+                      ${shipping.toFixed(2)}
+                    </span>
+                  </div>
+
+                  <div className="flex justify-between">
+                    <span className="flex items-center gap-2">
+                      <MdDiscount /> Tax ({taxRate * 100}%)
+                    </span>
+                    <span className="font-semibold">
+                      ${(subtotal * taxRate).toFixed(2)}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="border-t border-white/40 mt-6 pt-6">
+                  <div className="flex justify-between text-xl font-bold">
+                    <span>Total</span>
+                    <span>${total.toFixed(2)}</span>
+                  </div>
+                </div>
+
+                <Link
+                  href="/checkout"
+                  className="mt-8 btn btn-lg w-full bg-[var(--color-accent)] text-white rounded-full shadow-lg hover:scale-105 transition"
+                >
+                  <MdCreditCard className="mr-2 text-xl" />
+                  Proceed to Checkout
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

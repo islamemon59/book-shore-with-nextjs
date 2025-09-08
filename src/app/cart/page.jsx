@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth";
-import CartTable from "./Components/CartTable/CartTable";
 import { authOptions } from "@/lib/authOptions";
 import { collectionObj, dbConnect } from "@/lib/dbConnect";
+import CartTable from "./Components/CartTable/CartTable";
 
 export default async function CartPage() {
   const session = await getServerSession(authOptions);
