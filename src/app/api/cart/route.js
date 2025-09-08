@@ -76,14 +76,30 @@ export async function POST(req) {
 }
 
 export async function GET() {
-  const session = await getServerSession(authOptions)
-    console.log(session);
+  try {
+    // 1. Check user session
+    const session = await getServerSession(authOptions);
+    console.log("Session:", session);
+
     if (!session) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-  console.log("session user email",user);
-  const cartCollection = await dbConnect(collectionObj.cartDataCollection);
-  const cartItems = await cartCollection.find({ userEmail: session.user.email }).toArray();
 
-  return NextResponse.json(cartItems);
+    // 2. Connect to DB
+    const cartCollection = await dbConnect(collectionObj.cartDataCollection);
+
+    // 3. Get user's cart items
+    const cartItems = await cartCollection
+      .find({ userEmail: session.user.email })
+      .toArray();
+
+    return NextResponse.json(cartItems);
+  } catch (error) {
+    console.error("Error fetching cart:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch cart", details: error.message },
+      { status: 500 }
+    );
+  }
 }
+
