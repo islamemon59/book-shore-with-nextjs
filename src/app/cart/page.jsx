@@ -22,8 +22,7 @@ export default async function CartPage() {
     .toArray();
 
   return (
-    <section className="container mx-auto px-6 py-12">
-      <h1 className="text-3xl font-extrabold mb-6">🛒 Your Cart</h1>
+    <section className="container mx-auto px-6">
       <CartTable items={cartItems} />
     </section>
   );

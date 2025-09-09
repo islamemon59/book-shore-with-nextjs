@@ -2,24 +2,12 @@
 import { useState, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import Swal from "sweetalert2";
-
-// React Icons
-import {
-  MdAdd,
-  MdRemove,
-  MdClose,
-  MdLocalShipping,
-  MdDiscount,
-  MdAttachMoney,
-  MdCreditCard,
-} from "react-icons/md";
-import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import CartDeleteButton from "../CartDeleteButton/CartDeleteButton";
+import OrderSummary from "../OrderSummary/OrderSummary";
+import UpdateQuantityButton from "../UpdateQuantityButton/UpdateQuantityButton";
 
 export default function CartTable({ items }) {
   const [cart, setCart] = useState(items);
-  const router = useRouter();
   const shipping = 5.99; // Mock shipping
   const taxRate = 0.08; // 8% tax
 
@@ -35,69 +23,12 @@ export default function CartTable({ items }) {
     [subtotal]
   );
 
-  // Delete handler
-  const handleDelete = async (id) => {
-        const confirm = await Swal.fire({
-          title: "Are you sure?",
-          text: "This book will be permanently deleted!",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonText: "Yes, delete it!",
-          cancelButtonText: "Cancel",
-        });
-    if (confirm.isConfirmed) {
-      try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/api/cart/${id}`,
-          {
-            method: "DELETE",
-          }
-        );
-
-        if (res.ok) {
-          // setCart(cart.filter((item) => item._id !== id));
-          toast.success("The book has been removed.");
-          router.refresh();
-        }
-      } catch (error) {
-        toast.error(error);
-      }
-    }
-  };
-
-  // Quantity update
-  const handleUpdate = async (id, change) => {
-    setCart(
-      cart.map((item) =>
-        item._id === id
-          ? { ...item, quantity: Math.max(1, item.quantity + change) }
-          : item
-      )
-    );
-
-    try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/cart/${id}`,
-        {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ change }),
-        }
-      );
-      const data = await res.json();
-      if (data.remove) {
-        toast(<span className="text-primary font-bold">Quantity updated</span>);
-      }
-      console.log(data);
-    } catch (error) {
-      toast.error(error);
-    }
-  };
-
   return (
     <div className="min-h-screen bg-base-100 flex items-center justify-center p-4">
       <div className="w-full max-w-7xl bg-base-100 rounded-3xl p-8 shadow-2xl">
-        <h1 className="text-3xl font-bold text-neutral mb-8">Shopping Cart</h1>
+        <h1 className="text-3xl font-bold text-neutral mb-8">
+          🛒 Shopping Cart
+        </h1>
 
         {cart.length === 0 ? (
           <div className="text-center py-20 text-neutral">
@@ -147,33 +78,15 @@ export default function CartTable({ items }) {
 
                     {/* Quantity & Total */}
                     <div className="flex items-center gap-4">
-                      <div className="flex items-center space-x-2 bg-base-100 rounded-full p-1 shadow">
-                        <button
-                          className="btn btn-sm btn-circle text-neutral hover:bg-secondary hover:text-base-100"
-                          onClick={() => handleUpdate(item._id, -1)}
-                          disabled={item.quantity <= 1}
-                        >
-                          <MdRemove />
-                        </button>
-                        <span className="font-bold text-neutral w-6 text-center">
-                          {item.quantity}
-                        </span>
-                        <button
-                          className="btn btn-sm btn-circle text-neutral hover:bg-secondary hover:text-base-100"
-                          onClick={() => handleUpdate(item._id, 1)}
-                        >
-                          <MdAdd />
-                        </button>
-                      </div>
+                      <UpdateQuantityButton
+                        item={item}
+                        cart={cart}
+                        setCart={setCart}
+                      />
                       <span className="text-lg font-bold text-accent min-w-[70px] text-right">
                         ${(item.price * item.quantity).toFixed(2)}
                       </span>
-                      <button
-                        onClick={() => handleDelete(item._id)}
-                        className="btn btn-sm btn-circle bg-red-500 text-base-100 border-none hover:scale-110 transition"
-                      >
-                        <MdClose />
-                      </button>
+                      <CartDeleteButton cart={cart} setCart={setCart} item={item} />
                     </div>
                   </div>
                 </div>
@@ -181,57 +94,12 @@ export default function CartTable({ items }) {
             </div>
 
             {/* Order Summary */}
-            <div className="md:col-span-1">
-              <div className="bg-secondary text-base-100 rounded-3xl p-8 shadow-xl sticky top-8">
-                <h3 className="text-2xl font-bold mb-6 border-b pb-4 border-base-100/40">
-                  Order Summary
-                </h3>
-
-                <div className="space-y-4">
-                  <div className="flex justify-between">
-                    <span className="flex items-center gap-2">
-                      <MdAttachMoney /> Subtotal
-                    </span>
-                    <span className="font-semibold">
-                      ${subtotal.toFixed(2)}
-                    </span>
-                  </div>
-
-                  <div className="flex justify-between">
-                    <span className="flex items-center gap-2">
-                      <MdLocalShipping /> Shipping
-                    </span>
-                    <span className="font-semibold">
-                      ${shipping.toFixed(2)}
-                    </span>
-                  </div>
-
-                  <div className="flex justify-between">
-                    <span className="flex items-center gap-2">
-                      <MdDiscount /> Tax ({taxRate * 100}%)
-                    </span>
-                    <span className="font-semibold">
-                      ${(subtotal * taxRate).toFixed(2)}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="border-t border-base-100/40 mt-6 pt-6">
-                  <div className="flex justify-between text-xl font-bold">
-                    <span>Total</span>
-                    <span>${total.toFixed(2)}</span>
-                  </div>
-                </div>
-
-                <Link
-                  href="/checkout"
-                  className="mt-8 btn btn-lg w-full bg-accent text-base-100 rounded-full shadow-lg hover:scale-105 transition"
-                >
-                  <MdCreditCard className="mr-2 text-xl" />
-                  Proceed to Checkout
-                </Link>
-              </div>
-            </div>
+            <OrderSummary
+              subtotal={subtotal}
+              shipping={shipping}
+              taxRate={taxRate}
+              total={total}
+            />
           </div>
         )}
       </div>
