@@ -14,6 +14,7 @@ import {
   MdAttachMoney,
   MdCreditCard,
 } from "react-icons/md";
+import toast from "react-hot-toast";
 
 export default function CartTable({ items }) {
   const [cart, setCart] = useState(items);
@@ -24,7 +25,7 @@ export default function CartTable({ items }) {
   const subtotal = useMemo(
     () => cart.reduce((sum, item) => sum + item.price * item.quantity, 0),
     [cart]
-  );
+);
 
   // Total = subtotal + shipping + tax
   const total = useMemo(
@@ -47,14 +48,30 @@ export default function CartTable({ items }) {
           : item
       )
     );
+
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/cart/${id}`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ change }),
+        }
+      );
+      const data = await res.json();
+      if (data.remove) {
+        toast(<span className="text-primary font-bold">Quantity updated</span>);
+      }
+      console.log(data);
+    } catch (error) {
+      toast.error(error);
+    }
   };
 
   return (
     <div className="min-h-screen bg-base-100 flex items-center justify-center p-4">
       <div className="w-full max-w-7xl bg-base-100 rounded-3xl p-8 shadow-2xl">
-        <h1 className="text-3xl font-bold text-neutral mb-8">
-          Shopping Cart
-        </h1>
+        <h1 className="text-3xl font-bold text-neutral mb-8">Shopping Cart</h1>
 
         {cart.length === 0 ? (
           <div className="text-center py-20 text-neutral">
