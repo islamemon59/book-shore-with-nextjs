@@ -34,3 +34,24 @@ export async function PATCH(req, { params }) {
     );
   }
 }
+
+export async function DELETE(req, { params }) {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const { id } = await params;
+
+  const cartDataCollection = await dbConnect(collectionObj.cartDataCollection);
+  const result = await cartDataCollection.deleteOne({
+    _id: new ObjectId(id),
+    userEmail: session.user.email,
+  });
+
+  if (result.deletedCount === 0) {
+    return NextResponse.json({ error: "Item not found" }, { status: 404 });
+  }
+
+  return NextResponse.json({ success: true, deletedId: id });
+}
