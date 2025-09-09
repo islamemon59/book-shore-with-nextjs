@@ -15,9 +15,11 @@ import {
   MdCreditCard,
 } from "react-icons/md";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export default function CartTable({ items }) {
   const [cart, setCart] = useState(items);
+  const router = useRouter();
   const shipping = 5.99; // Mock shipping
   const taxRate = 0.08; // 8% tax
 
@@ -25,7 +27,7 @@ export default function CartTable({ items }) {
   const subtotal = useMemo(
     () => cart.reduce((sum, item) => sum + item.price * item.quantity, 0),
     [cart]
-);
+  );
 
   // Total = subtotal + shipping + tax
   const total = useMemo(
@@ -35,8 +37,32 @@ export default function CartTable({ items }) {
 
   // Delete handler
   const handleDelete = async (id) => {
-    setCart(cart.filter((item) => item._id !== id));
-    Swal.fire("Deleted!", "Item removed from cart.", "success");
+        const confirm = await Swal.fire({
+          title: "Are you sure?",
+          text: "This book will be permanently deleted!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonText: "Yes, delete it!",
+          cancelButtonText: "Cancel",
+        });
+    if (confirm.isConfirmed) {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/cart/${id}`,
+          {
+            method: "DELETE",
+          }
+        );
+
+        if (res.ok) {
+          // setCart(cart.filter((item) => item._id !== id));
+          toast.success("The book has been removed.");
+          router.refresh();
+        }
+      } catch (error) {
+        toast.error(error);
+      }
+    }
   };
 
   // Quantity update
