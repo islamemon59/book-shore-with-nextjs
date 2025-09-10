@@ -1,16 +1,13 @@
 "use client";
 
-import Swal from "sweetalert2";
+import { useRouter } from "next/navigation";
+
+
 
 export default function UpdateProfileButton() {
+  const router = useRouter()
   const handleUpdate = () => {
-    // Implement your profile update logic here
-    // e.g., redirect to an update form
-    Swal.fire({
-      icon: "info",
-      title: "Update Profile",
-      text: "Functionality for updating the profile will be added here.",
-    });
+router.push("/updateProfile")
   };
 
   return (
