@@ -1,6 +1,12 @@
 import DesktopLottie from "./Components/DesktopLottie/DesktopLottie";
 import LoginForm from "./Components/LoginForm/LoginForm";
-import Link from "next/link"; // Use Next.js Link for client-side navigation
+import Link from "next/link";
+
+export const generateMetadata = () => {
+  return {
+    title: "BookShore | Login",
+  };
+};
 
 export default function LoginPage() {
   return (

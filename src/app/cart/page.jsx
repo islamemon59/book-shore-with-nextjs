@@ -3,6 +3,12 @@ import { authOptions } from "@/lib/authOptions";
 import { collectionObj, dbConnect } from "@/lib/dbConnect";
 import CartTable from "./Components/CartTable/CartTable";
 
+export const generateMetadata = () => {
+  return {
+    title: "BookShore | Cart",
+  };
+};
+
 export default async function CartPage() {
   const session = await getServerSession(authOptions);
 

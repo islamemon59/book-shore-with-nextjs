@@ -5,6 +5,12 @@ import UpdateProfileButton from "./Components/UpdateProfileButton/UpdateProfileB
 import LogoutButton from "./Components/LogoutButton/LogoutButton";
 import { authOptions } from "@/lib/authOptions";
 
+export const generateMetadata = () => {
+  return {
+    title: "BookShore | Profile",
+  };
+};
+
 export default async function ProfilePage() {
   const session = await getServerSession(authOptions);
 

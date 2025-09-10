@@ -1,6 +1,12 @@
 import BookCard from "./Components/BookCard/BookCard";
 import SearchInput from "./Components/SearchInput/SearchInput";
 
+export const generateMetadata = () => {
+  return {
+    title: "BookShore | All Books",
+  };
+};
+
 export default async function BookGrid({ searchParams }) {
   const search = searchParams?.search || "";
 
@@ -40,7 +46,7 @@ export default async function BookGrid({ searchParams }) {
         <SearchInput />
 
         {/* Conditional rendering for results */}
-        {(!books || books.length === 0) ? (
+        {!books || books.length === 0 ? (
           <div className="text-center py-24">
             <h2 className="text-3xl font-bold text-[var(--color-neutral)] mb-4">
               📚 No Books Found 📚

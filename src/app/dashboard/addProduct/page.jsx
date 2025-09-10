@@ -1,5 +1,9 @@
 import AddBookForm from "./Components/AddBookForm/AddBookForm";
-
+export const generateMetadata = () => {
+  return {
+    title: "BookShore | Dashboard | Add New Book",
+  };
+};
 const AddBookPage = () => {
   return (
     <div className="max-w-6xl mx-auto p-4 md:p-8">

@@ -1,6 +1,12 @@
 import Image from "next/image";
 import ActionButtons from "./Components/ActionButtons/ActionButtons";
 
+export const generateMetadata = () => {
+  return {
+    title: "BookShore | Dashboard | All Books",
+  };
+};
+
 export default async function BooksPage() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/books`, {
     cache: "no-store",

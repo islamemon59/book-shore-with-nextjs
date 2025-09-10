@@ -2,6 +2,12 @@ import DesktopLottie from "../login/Components/DesktopLottie/DesktopLottie";
 import RegisterForm from "./Components/RegisterForm/RegisterForm";
 import Link from "next/link"; // Use Next.js Link for client-side navigation
 
+export const generateMetadata = () => {
+  return {
+    title: "BookShore | Register",
+  };
+};
+
 export default function RegisterPage() {
   return (
     <div className="flex flex-col lg:flex-row items-center justify-center gap-6 min-h-screen bg-base-100 p-8 md:p-12">
