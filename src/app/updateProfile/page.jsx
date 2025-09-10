@@ -17,9 +17,16 @@ export default async function UpdateProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-base-100 flex items-center justify-center">
-      <div className="w-full max-w-lg bg-base-100 shadow-xl rounded-2xl p-8">
-        <h1 className="text-2xl font-bold text-neutral mb-6">Update Profile</h1>
+    <div className="min-h-screen bg-base-200 flex items-center justify-center p-4 sm:p-6 md:p-8">
+      <div className="w-full max-w-lg">
+        <h1 className="text-3xl font-extrabold text-center mb-8">
+          <span className="bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
+            Update Profile
+          </span>
+          <div className="mt-2 flex justify-center">
+            <span className="h-1 w-16 rounded-full bg-gradient-to-r from-primary via-secondary to-accent"></span>
+          </div>
+        </h1>
         {/* Pass user info into client form */}
         <UpdateProfileForm user={session.user} />
       </div>

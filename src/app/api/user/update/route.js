@@ -36,5 +36,5 @@ export async function PATCH(req) {
     );
   }
 
-  return NextResponse.json({ success: true, user: result.value });
+  return NextResponse.json({ success: true, user: result });
 }

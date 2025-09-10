@@ -6,10 +6,10 @@ import Swal from "sweetalert2";
 import Image from "next/image";
 
 export default function UpdateProfileForm({ user }) {
-  const { update } = useSession(); // session already passed from server
+  const { update } = useSession();
   const [preview, setPreview] = useState(user?.image || null);
+  const [loading, setLoading] = useState(false);
 
-  // 🔹 Handle image preview
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -20,6 +20,7 @@ export default function UpdateProfileForm({ user }) {
   // 🔹 Handle form submit
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       const form = e.target;
@@ -51,7 +52,8 @@ export default function UpdateProfileForm({ user }) {
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Update failed");
+      console.log(data);
+      if (!res.ok || !data.user) throw new Error(data.error || "Update failed");
 
       // ✅ Update session instantly
       await update({
@@ -60,6 +62,8 @@ export default function UpdateProfileForm({ user }) {
         image: data.user.image,
       });
 
+      setLoading(false);
+
       Swal.fire("✅ Success!", "Profile updated successfully", "success");
     } catch (err) {
       Swal.fire("❌ Error", err.message, "error");
@@ -67,49 +71,78 @@ export default function UpdateProfileForm({ user }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      {/* Image Preview */}
-      <div className="flex flex-col items-center">
-        <div className="relative w-24 h-24 mb-2">
-          <Image
-            src={preview || "/default-avatar.png"}
-            alt="Profile Preview"
-            fill
-            className="rounded-full object-cover"
+    <div className="p-8 bg-base-100 rounded-3xl shadow-2xl max-w-lg mx-auto">
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Image Preview and Upload */}
+        <div className="flex flex-col items-center">
+          <div className="relative w-28 h-28 mb-4">
+            <Image
+              src={preview || "/default-avatar.png"}
+              alt="Profile Preview"
+              fill
+              className="rounded-full object-cover border-4 border-primary shadow-lg"
+            />
+          </div>
+          <label className="block w-full text-center cursor-pointer font-medium text-info transition-colors duration-300 hover:text-info-focus">
+            Change Profile Picture
+            <input
+              name="image"
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleImageChange}
+            />
+          </label>
+        </div>
+
+        {/* Name Input */}
+        <div>
+          <label
+            htmlFor="name"
+            className="text-sm font-semibold text-neutral block mb-2"
+          >
+            Full Name
+          </label>
+          <input
+            id="name"
+            name="name"
+            type="text"
+            className="w-full px-4 py-3 rounded-xl bg-base-200 border-2 border-base-300 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300"
+            placeholder="Your Name"
+            defaultValue={user?.name}
           />
         </div>
-      </div>
 
-      {/* Name */}
-      <input
-        name="name"
-        type="text"
-        className="input input-bordered w-full"
-        placeholder="Your Name"
-        defaultValue={user?.name}
-      />
+        {/* Email Input */}
+        <div>
+          <label
+            htmlFor="email"
+            className="text-sm font-semibold text-neutral block mb-2"
+          >
+            Email Address
+          </label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            className="w-full px-4 py-3 rounded-xl bg-base-200 border-2 border-base-300 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300"
+            placeholder="Your Email"
+            defaultValue={user?.email}
+          />
+        </div>
 
-      {/* Email */}
-      <input
-        name="email"
-        type="email"
-        className="input input-bordered w-full"
-        placeholder="Your Email"
-        defaultValue={user?.email}
-      />
-
-      {/* File Upload */}
-      <input
-        name="image"
-        type="file"
-        accept="image/*"
-        className="file-input file-input-bordered w-full"
-        onChange={handleImageChange}
-      />
-
-      <button type="submit" className="btn btn-primary w-full">
-        Save Changes
-      </button>
-    </form>
+        {/* Submit Button */}
+        <button
+          type="submit"
+          className="w-full py-3 rounded-xl font-bold text-lg text-primary-content bg-gradient-to-r from-primary to-secondary shadow-lg transition-all duration-300 transform hover:scale-105"
+        >
+          {loading ? (
+            <span className="loading loading-spinner text-base-100"></span>
+          ) : (
+            "Save Changes"
+          )}
+        </button>
+      </form>
+    </div>
   );
 }
