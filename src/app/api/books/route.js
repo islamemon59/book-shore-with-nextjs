@@ -7,7 +7,8 @@ export async function GET(request) {
   try {
     const searchParams = request.nextUrl.searchParams;
     const search = searchParams.get("search") || "";
-    const sort = searchParams.get("sort") || "";
+    const sort = searchParams.get("sort") || "newest";
+    const genre = searchParams.get("genre");
 
     // Create the search filter
     const searchFilter = search
@@ -27,10 +28,12 @@ export async function GET(request) {
     };
 
     const sortQuery = sortQueryMap[sort];
+    const genreFilter = genre ? { genre: genre } : {};
 
     const booksCollection = await dbConnect(collectionObj.booksCollection);
+    const finalQuery = { ...searchFilter, ...genreFilter };
     const books = await booksCollection
-      .find(searchFilter)
+      .find(finalQuery)
       .sort(sortQuery)
       .toArray();
 

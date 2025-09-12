@@ -1,41 +1,100 @@
 "use client";
 
+import React, { useState, useRef, useEffect } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { FaChevronDown } from "react-icons/fa";
+import { Calendar, DollarSign } from "lucide-react";
 
-export default function SortBooks() {
+// Map sort options to their respective Lucide icons
+const sortIcons = {
+  newest: Calendar,
+  oldest: Calendar,
+  priceLow: DollarSign,
+  priceHigh: DollarSign,
+};
+
+const SortOptions = () => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const handleSortChange = (e) => {
-    const newSort = e.target.value;
+  // State to manage dropdown visibility
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  // Static list of sort options
+  const sortOptions = [
+    { value: "newest", label: "Newest → Oldest" },
+    { value: "oldest", label: "Oldest → Newest" },
+    { value: "priceLow", label: "Price: Low → High" },
+    { value: "priceHigh", label: "Price: High → Low" },
+  ];
+
+  const handleSortChange = (newSort) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set("sort", newSort);
     router.push(`${pathname}?${params.toString()}`);
+    setIsDropdownOpen(false); // Close the dropdown after selection
   };
 
   const currentSort = searchParams.get("sort") || "newest";
+  const currentSortLabel = sortOptions.find(
+    (option) => option.value === currentSort
+  )?.label;
+  const CurrentIcon = sortIcons[currentSort];
+
+  // Hook to close the dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [dropdownRef]);
 
   return (
-    <div className="mb-6">
-      <div className="relative inline-block w-64">
-        <select
-          value={currentSort}
-          onChange={handleSortChange}
-          className="block w-full appearance-none bg-base-100 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-200 py-3 px-4 pr-10 rounded-xl shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
-        >
-          <option value="newest">Newest → Oldest</option>
-          <option value="oldest">Oldest → Newest</option>
-          <option value="priceLow">Price: Low → High</option>
-          <option value="priceHigh">Price: High → Low</option>
-        </select>
-
-        {/* Dropdown Icon */}
-        <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-500 dark:text-gray-400">
-          <FaChevronDown className="h-4 w-4" />
+    <div className="relative w-full mb-6" ref={dropdownRef}>
+      {/* Dropdown button */}
+      <button
+        type="button"
+        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+        className="w-full flex justify-between items-center bg-base-100 border border-secondary text-neutral py-3 px-4 rounded-xl leading-tight focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary transition-colors"
+      >
+        <div className="flex items-center space-x-2">
+          {CurrentIcon && <CurrentIcon className="w-5 h-5 text-accent" />}
+          <span>{currentSortLabel}</span>
         </div>
-      </div>
+        <FaChevronDown
+          className={`h-4 w-4 transform transition-transform duration-200 ${
+            isDropdownOpen ? "rotate-180" : "rotate-0"
+          }`}
+        />
+      </button>
+
+      {/* Dropdown menu */}
+      {isDropdownOpen && (
+        <ul className="absolute z-10 w-full mt-2 rounded-xl border border-secondary bg-base-100 shadow-lg max-h-60 overflow-y-auto">
+          {sortOptions.map((option) => {
+            const Icon = sortIcons[option.value];
+            return (
+              <li
+                key={option.value}
+                onClick={() => handleSortChange(option.value)}
+                className="flex items-center space-x-3 px-4 py-3 cursor-pointer hover:bg-neutral-100 transition-colors"
+              >
+                {Icon && <Icon className="w-5 h-5 text-accent" />}
+                <span>{option.label}</span>
+              </li>
+            );
+          })}
+        </ul>
+      )}
     </div>
   );
-}
+};
+
+export default SortOptions;

@@ -1,6 +1,7 @@
 import BookCard from "./Components/BookCard/BookCard";
 import SearchInput from "./Components/SearchInput/SearchInput";
 import SortBooks from "./Components/SortBooks/SortBooks";
+import SortByGenre from "./Components/SortByGenre/SortByGenre";
 
 export const generateMetadata = () => {
   return {
@@ -12,15 +13,21 @@ export default async function BookGrid({ searchParams }) {
   // Correct way to access searchParams: No await needed.
   const search = searchParams?.search || "";
   const sort = searchParams?.sort || "newest";
+  const genre = searchParams?.genre;
 
   let books = [];
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/books?search=${search}&sort=${sort}`,
-      {
-        cache: "no-store",
-      }
-    );
+    // Build the URL based on the parameters
+    let apiUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/books?search=${search}&sort=${sort}`;
+
+    // Only add the genre parameter if it's not 'All'
+    if (genre && genre !== "All") {
+      apiUrl += `&genre=${genre}`;
+    }
+
+    const res = await fetch(apiUrl, {
+      cache: "no-store",
+    });
 
     if (!res.ok) {
       throw new Error(`API call failed with status: ${res.status}`);
@@ -39,10 +46,28 @@ export default async function BookGrid({ searchParams }) {
   return (
     <div className="container mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-12 gap-8">
       {/* Sidebar: Visible on md screens and up */}
-      <div className="hidden md:block md:col-span-4">
-        {/* Your sidebar content goes here. */}
-        <SortBooks />
+<aside className="hidden md:block md:col-span-4">
+      <div className="bg-base-100 dark:bg-gray-900 shadow-lg rounded-2xl p-6 space-y-8">
+        {/* Section: Sort by */}
+        <div>
+          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-3">
+            Sort By
+          </h2>
+          <SortBooks />
+        </div>
+
+        {/* Divider */}
+        <div className="border-t border-gray-200" />
+
+        {/* Section: Genre */}
+        <div>
+          <h2 className="text-lg font-semibold text-gray-800 mb-3">
+            Filter by Genre
+          </h2>
+          <SortByGenre />
+        </div>
       </div>
+    </aside>
 
       {/* Main Content */}
       <div className="col-span-1 md:col-span-8">
