@@ -22,7 +22,6 @@ export default function SearchInput() {
     e.preventDefault();
 
     const params = new URLSearchParams(window.location.search);
-    console.log(params);
     if (search.trim()) {
       params.set("search", search.trim());
     } else {

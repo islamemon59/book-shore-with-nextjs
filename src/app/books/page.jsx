@@ -1,5 +1,6 @@
 import BookCard from "./Components/BookCard/BookCard";
 import SearchInput from "./Components/SearchInput/SearchInput";
+import SortBooks from "./Components/SortBooks/SortBooks";
 
 export const generateMetadata = () => {
   return {
@@ -8,12 +9,14 @@ export const generateMetadata = () => {
 };
 
 export default async function BookGrid({ searchParams }) {
+  // Correct way to access searchParams: No await needed.
   const search = searchParams?.search || "";
+  const sort = searchParams?.sort || "newest";
 
   let books = [];
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/books?search=${search}`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/books?search=${search}&sort=${sort}`,
       {
         cache: "no-store",
       }
@@ -38,6 +41,7 @@ export default async function BookGrid({ searchParams }) {
       {/* Sidebar: Visible on md screens and up */}
       <div className="hidden md:block md:col-span-4">
         {/* Your sidebar content goes here. */}
+        <SortBooks />
       </div>
 
       {/* Main Content */}

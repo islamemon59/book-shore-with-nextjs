@@ -7,12 +7,32 @@ export async function GET(request) {
   try {
     const searchParams = request.nextUrl.searchParams;
     const search = searchParams.get("search") || "";
+    const sort = searchParams.get("sort") || "";
 
-    // The query is fine, no changes needed here
-    const query = search ? { title: { $regex: search, $options: "i" } } : {};
+    // Create the search filter
+    const searchFilter = search
+      ? {
+          $or: [
+            { title: { $regex: search, $options: "i" } },
+            { genre: { $regex: search, $options: "i" } },
+          ],
+        }
+      : {};
+
+    const sortQueryMap = {
+      newest: { createdAt: -1 },
+      oldest: { createdAt: 1 },
+      priceLow: { price: 1 },
+      priceHigh: { price: -1 },
+    };
+
+    const sortQuery = sortQueryMap[sort];
 
     const booksCollection = await dbConnect(collectionObj.booksCollection);
-    const books = await booksCollection.find(query).toArray();
+    const books = await booksCollection
+      .find(searchFilter)
+      .sort(sortQuery)
+      .toArray();
 
     return NextResponse.json(books);
   } catch (error) {
