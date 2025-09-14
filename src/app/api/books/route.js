@@ -9,8 +9,10 @@ export async function GET(request) {
     const search = searchParams.get("search") || "";
     const sort = searchParams.get("sort") || "newest";
     const genre = searchParams.get("genre");
+    const page = parseInt(searchParams.get("page") || "1", 10);
+    const limit = parseInt(searchParams.get("limit") || "6", 10);
 
-    // Create the search filter
+    // Filters
     const searchFilter = search
       ? {
           $or: [
@@ -27,25 +29,42 @@ export async function GET(request) {
       priceHigh: { price: -1 },
     };
 
-    const sortQuery = sortQueryMap[sort];
-    const genreFilter = genre ? { genre: genre } : {};
+    const sortQuery = sortQueryMap[sort] || { createdAt: -1 };
+    const genreFilter = genre ? { genre } : {};
+    const finalQuery = { ...searchFilter, ...genreFilter };
 
     const booksCollection = await dbConnect(collectionObj.booksCollection);
-    const finalQuery = { ...searchFilter, ...genreFilter };
+
+    // ✅ Count total
+    const totalBooks = await booksCollection.countDocuments(finalQuery);
+
+    // ✅ Apply pagination
     const books = await booksCollection
       .find(finalQuery)
       .sort(sortQuery)
+      .skip((page - 1) * limit)
+      .limit(limit)
       .toArray();
 
-    return NextResponse.json(books);
+    return NextResponse.json({
+      data: books,
+      pagination: {
+        totalBooks,
+        totalPages: Math.ceil(totalBooks / limit),
+        page,
+        limit,
+      },
+    });
   } catch (error) {
-    console.error("Failed to fetch books in API:", error); // Use console.error for better visibility
+    console.error("Failed to fetch books in API:", error);
     return NextResponse.json(
       { error: "Failed to fetch books", details: error.message },
       { status: 500 }
     );
   }
 }
+
+
 
 export async function POST(request) {
   try {

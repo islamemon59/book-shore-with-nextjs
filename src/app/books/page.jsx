@@ -1,4 +1,5 @@
 import BookCard from "./Components/BookCard/BookCard";
+import Pagination from "./Components/Pagination/Pagination";
 import SearchInput from "./Components/SearchInput/SearchInput";
 import SortBooks from "./Components/SortBooks/SortBooks";
 import SortByGenre from "./Components/SortByGenre/SortByGenre";
@@ -14,11 +15,14 @@ export default async function BookGrid({ searchParams }) {
   const search = searchParams?.search || "";
   const sort = searchParams?.sort || "newest";
   const genre = searchParams?.genre;
+  const page = parseInt(searchParams?.page) || 1;
+  const limit = parseInt(searchParams?.limit) || 12; // show 6 per page
 
   let books = [];
+  let pagination = [];
   try {
     // Build the URL based on the parameters
-    let apiUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/books?search=${search}&sort=${sort}`;
+    let apiUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/books?search=${search}&sort=${sort}&page=${page}&limit=${limit}`;
 
     // Only add the genre parameter if it's not 'All'
     if (genre && genre !== "All") {
@@ -34,10 +38,11 @@ export default async function BookGrid({ searchParams }) {
     }
 
     const data = await res.json();
-    if (Array.isArray(data)) {
-      books = data;
+    if (data?.data && Array.isArray(data.data)) {
+      books = data.data; // ✅ paginated books
+      pagination = data.pagination; // ✅ store pagination info
     } else {
-      console.error("API response is not an array:", data);
+      console.error("API response format unexpected:", data);
     }
   } catch (error) {
     console.error("Failed to fetch books:", error);
@@ -46,28 +51,28 @@ export default async function BookGrid({ searchParams }) {
   return (
     <div className="container mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-12 gap-8">
       {/* Sidebar: Visible on md screens and up */}
-<aside className="hidden md:block md:col-span-4">
-      <div className="bg-base-100 dark:bg-gray-900 shadow-lg rounded-2xl p-6 space-y-8">
-        {/* Section: Sort by */}
-        <div>
-          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-3">
-            Sort By
-          </h2>
-          <SortBooks />
-        </div>
+      <aside className="hidden md:block md:col-span-4">
+        <div className="bg-base-100 dark:bg-gray-900 shadow-lg rounded-2xl p-6 space-y-8">
+          {/* Section: Sort by */}
+          <div>
+            <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-3">
+              Sort By
+            </h2>
+            <SortBooks />
+          </div>
 
-        {/* Divider */}
-        <div className="border-t border-gray-200" />
+          {/* Divider */}
+          <div className="border-t border-gray-200" />
 
-        {/* Section: Genre */}
-        <div>
-          <h2 className="text-lg font-semibold text-gray-800 mb-3">
-            Filter by Genre
-          </h2>
-          <SortByGenre />
+          {/* Section: Genre */}
+          <div>
+            <h2 className="text-lg font-semibold text-gray-800 mb-3">
+              Filter by Genre
+            </h2>
+            <SortByGenre />
+          </div>
         </div>
-      </div>
-    </aside>
+      </aside>
 
       {/* Main Content */}
       <div className="col-span-1 md:col-span-8">
@@ -91,6 +96,7 @@ export default async function BookGrid({ searchParams }) {
             ))}
           </div>
         )}
+        {books.length > 0 && <Pagination pagination={pagination} />}
       </div>
     </div>
   );
