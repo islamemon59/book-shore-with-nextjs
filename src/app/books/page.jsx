@@ -21,7 +21,6 @@ export default async function BookGrid({ searchParams }) {
   let books = [];
   let pagination = [];
   try {
-    // Build the URL based on the parameters
     let apiUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/books?search=${search}&sort=${sort}&page=${page}&limit=${limit}`;
 
     // Only add the genre parameter if it's not 'All'
