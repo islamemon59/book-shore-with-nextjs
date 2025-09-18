@@ -11,7 +11,6 @@ export const generateMetadata = () => {
 };
 
 export default async function BookGrid({ searchParams }) {
-  // Correct way to access searchParams: No await needed.
   const search = searchParams?.search || "";
   const sort = searchParams?.sort || "newest";
   const genre = searchParams?.genre;
