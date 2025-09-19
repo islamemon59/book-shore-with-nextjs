@@ -142,7 +142,7 @@ const SortByGenre = () => {
 
       {/* Dropdown menu */}
       {isDropdownOpen && (
-        <ul className="absolute z-10 w-full mt-2 rounded-xl border border-secondary bg-base-100 shadow-lg max-h-70 overflow-y-auto">
+        <ul className="absolute z-20 w-full mt-2 rounded-xl border border-secondary bg-base-100 shadow-lg max-h-70 overflow-y-auto">
           {genres.map((g) => {
             const Icon = genreIcons[g] || BookOpen; // Default icon
             return (

@@ -1,6 +1,8 @@
 import Image from "next/image";
 import ActionButtons from "./Components/ActionButtons/ActionButtons";
 import Pagination from "@/app/books/Components/Pagination/Pagination";
+import SortByGenre from "@/app/books/Components/SortByGenre/SortByGenre";
+import SortOptions from "@/app/books/Components/SortBooks/SortBooks";
 
 export const generateMetadata = () => {
   return {
@@ -9,27 +11,39 @@ export const generateMetadata = () => {
 };
 
 export default async function BooksPage({ searchParams }) {
-    const search = searchParams?.search || "";
+  const search = searchParams?.search || "";
   const sort = searchParams?.sort || "newest";
   const genre = searchParams?.genre;
   const page = parseInt(searchParams?.page) || 1;
   const limit = parseInt(searchParams?.limit) || 12; // show 6 per page
+  let books = [];
   let pagination = [];
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/books?page=${page}&limit=${limit}`,
-    {
-      cache: "no-store",
+  try {
+    let apiUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/books?search=${search}&sort=${sort}&page=${page}&limit=${limit}`;
+
+    // Only add the genre parameter if it's not 'All'
+    if (genre && genre !== "All") {
+      apiUrl += `&genre=${genre}`;
     }
-  );
 
-  if (!res.ok) {
-    throw new Error("Failed to fetch books");
+    const res = await fetch(apiUrl, {
+      cache: "no-store",
+    });
+
+    if (!res.ok) {
+      throw new Error(`API call failed with status: ${res.status}`);
+    }
+
+    const data = await res.json();
+    if (data?.data && Array.isArray(data.data)) {
+      books = data.data; // ✅ paginated books
+      pagination = data.pagination; // ✅ store pagination info
+    } else {
+      console.error("API response format unexpected:", data);
+    }
+  } catch (error) {
+    console.error("Failed to fetch books:", error);
   }
-
-  const data = await res.json();
-  pagination = data.pagination;
-  console.log(data);
-  const books = data.data;
 
   return (
     <section className="container mx-auto px-4 py-12">
@@ -43,11 +57,32 @@ export default async function BooksPage({ searchParams }) {
         </div>
       </h1>
 
-      <div className="grid grid-cols-12">
+      <div className="grid grid-cols-12 gap-6">
         {/* sorting books */}
-        <div className="col-span-3"></div>
+        <aside className="lg:col-span-3 col-span-12">
+          <div className="bg-base-100 dark:bg-gray-900 shadow-lg rounded-2xl p-6 space-y-8">
+            {/* Section: Sort by */}
+            <div>
+              <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-3">
+                Sort By
+              </h2>
+              <SortOptions />
+            </div>
+
+            {/* Divider */}
+            <div className="border-t border-gray-200" />
+
+            {/* Section: Genre */}
+            <div>
+              <h2 className="text-lg font-semibold text-gray-800 mb-3">
+                Filter by Genre
+              </h2>
+              <SortByGenre />
+            </div>
+          </div>
+        </aside>
         {/* Table */}
-        <div className="overflow-x-auto rounded-2xl shadow-xl border border-base-200 col-span-9">
+        <div className="overflow-x-auto rounded-2xl shadow-xl border border-base-200 lg:col-span-9 col-span-12">
           <table className="table w-full bg-base-100">
             {/* Table Header */}
             <thead className="sticky top-0 z-10 bg-gradient-to-r from-primary to-secondary text-white text-base">
@@ -139,9 +174,9 @@ export default async function BooksPage({ searchParams }) {
               })}
             </tbody>
           </table>
-          <Pagination pagination={pagination} />
         </div>
       </div>
+            <Pagination pagination={pagination} />
     </section>
   );
 }
