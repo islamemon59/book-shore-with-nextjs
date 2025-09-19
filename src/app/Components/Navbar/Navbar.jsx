@@ -1,8 +1,6 @@
 import Link from "next/link";
 import NavLinks from "./Components/NavLinks/NavLinks";
 import UserMenu from "./Components/UserMenu/UserMenu";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/authOptions";
 
 export default async function Navbar() {
 

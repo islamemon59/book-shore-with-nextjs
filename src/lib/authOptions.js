@@ -70,13 +70,19 @@ export const authOptions = {
         return false;
       }
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       // If a user object exists (i.e., this is the sign-in),
       // add the user's properties to the token.
       if (user) {
         token.id = user.id;
         token.role = user.role;
         token.image = user.image; // Pass the image URL from the user to the token
+      }
+
+       if (trigger === "update" && session) {
+        token.name = session.name;
+        token.email = session.email;
+        token.image = session.image;
       }
       return token;
     },

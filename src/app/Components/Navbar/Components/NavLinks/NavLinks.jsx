@@ -15,7 +15,6 @@ export default function NavLinks() {
   const iconColorClass = "text-[#144D75] group-hover:text-base-100";
   const {status} = useSession();
   const isUser = status === "authenticated"
-  console.log(isUser);
 
   return (
     <>

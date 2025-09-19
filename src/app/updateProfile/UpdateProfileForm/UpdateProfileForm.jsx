@@ -5,8 +5,10 @@ import { useSession } from "next-auth/react";
 import Swal from "sweetalert2";
 import Image from "next/image";
 
-export default function UpdateProfileForm({ user }) {
-  const { update } = useSession();
+export default function UpdateProfileForm() {
+  const { data: session, update } = useSession();
+  const user = session?.user;
+  console.log(user);
   const [preview, setPreview] = useState(user?.image || null);
   const [loading, setLoading] = useState(false);
 
@@ -57,9 +59,9 @@ export default function UpdateProfileForm({ user }) {
 
       // ✅ Update session instantly
       await update({
-        name: data.user.name,
-        email: data.user.email,
-        image: data.user.image,
+        name: data?.user?.name,
+        email: data?.user?.email,
+        image: data?.user?.image,
       });
 
       setLoading(false);

@@ -28,7 +28,7 @@ export default async function UpdateProfilePage() {
           </div>
         </h1>
         {/* Pass user info into client form */}
-        <UpdateProfileForm user={session.user} />
+        <UpdateProfileForm />
       </div>
     </div>
   );
