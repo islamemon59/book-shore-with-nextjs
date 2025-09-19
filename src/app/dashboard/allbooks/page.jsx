@@ -1,5 +1,6 @@
 import Image from "next/image";
 import ActionButtons from "./Components/ActionButtons/ActionButtons";
+import Pagination from "@/app/books/Components/Pagination/Pagination";
 
 export const generateMetadata = () => {
   return {
@@ -7,8 +8,11 @@ export const generateMetadata = () => {
   };
 };
 
-export default async function BooksPage() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/books`, {
+export default async function BooksPage({ searchParams }) {
+  const page = parseInt(searchParams?.page) || 1;
+  const limit = parseInt(searchParams?.limit) || 12; // show 6 per page
+  let pagination = [];
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/books?page=${page}&limit=${limit}`, {
     cache: "no-store",
   });
 
@@ -16,7 +20,10 @@ export default async function BooksPage() {
     throw new Error("Failed to fetch books");
   }
 
-  const books = await res.json();
+  const data = await res.json();
+  pagination = data.pagination;
+  console.log(data);
+  const books = data.data;
 
   return (
     <section className="container mx-auto px-4 py-12">
@@ -112,7 +119,6 @@ export default async function BooksPage() {
                     )}
                   </td>
 
-
                   {/* Actions */}
                   <td className="text-center">
                     <ActionButtons id={book._id} />
@@ -122,6 +128,7 @@ export default async function BooksPage() {
             })}
           </tbody>
         </table>
+        <Pagination pagination={pagination} />
       </div>
     </section>
   );
