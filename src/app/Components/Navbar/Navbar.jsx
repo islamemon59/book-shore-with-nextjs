@@ -1,9 +1,10 @@
 import Link from "next/link";
 import NavLinks from "./Components/NavLinks/NavLinks";
 import UserMenu from "./Components/UserMenu/UserMenu";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/authOptions";
 
 export default async function Navbar() {
-  const isAdmin = true; // later replace with session/role check
 
   return (
     <div className="bg-base-100 shadow-lg">
@@ -44,7 +45,7 @@ export default async function Navbar() {
             tabIndex={0}
             className="menu absolute top-12 right-0 menu-sm dropdown-content z-[1] p-4 shadow-xl bg-base-100 rounded-box w-52 animate-fadeIn"
           >
-            <NavLinks isAdmin={isAdmin} />
+            <NavLinks />
             <div className="divider my-2 bg-neutral-content h-px" />
             <UserMenu />
           </ul>
@@ -53,7 +54,7 @@ export default async function Navbar() {
         {/* Desktop Menu */}
         <div className="flex-none hidden lg:flex">
           <ul className="menu-horizontal px-1 gap-4 items-center">
-            <NavLinks isAdmin={isAdmin} />
+            <NavLinks />
             <UserMenu />
           </ul>
         </div>
