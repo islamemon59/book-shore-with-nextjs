@@ -13,9 +13,13 @@ import {
 } from "react-icons/fa";
 import Profile from "../Profile/Profile";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 const Sidebar = ({ navLinks, pathname }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const { data: session } = useSession();
+
+  const role = session?.user?.role || "guest";
 
   // Icon mapping
   const iconMap = {
@@ -26,6 +30,11 @@ const Sidebar = ({ navLinks, pathname }) => {
     "Order details": <FaClipboardList className="w-5 h-5" />,
     "Update order status": <FaTruck className="w-5 h-5" />,
   };
+
+    // Filter links based on role
+  const filteredLinks = navLinks.filter((link) =>
+    link.roles.includes(role)
+  );
 
   return (
     <>
@@ -80,14 +89,14 @@ const Sidebar = ({ navLinks, pathname }) => {
           {/* Nav */}
           <nav className="flex-1 overflow-y-auto mt-4">
             <ul className="menu space-y-2">
-              {navLinks.map((link) => (
+              {filteredLinks.map((link) => (
                 <li key={link.name} className="relative">
                   <Link
                     href={link.href}
                     className={`flex items-center font-semibold gap-3 p-3 rounded-lg text-[16px] transition-colors duration-300 ${
                       pathname === link.href
-                        ? "bg-primary text-white shadow-md"
-                        : "hover:bg-secondary hover:text-white"
+                        ? "bg-primary text-base-100 shadow-md"
+                        : "hover:bg-secondary hover:text-base-100"
                     }`}
                     onClick={() => setIsSidebarOpen(false)}
                   >
