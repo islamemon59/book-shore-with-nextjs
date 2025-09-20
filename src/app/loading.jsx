@@ -9,13 +9,8 @@ export default function Loading() {
         <Suspense fallback={null}>
           <BookLoader />
         </Suspense>
-
-        <p className="text-xl font-semibold mt-4 text-primary">
-          Loading, please wait...
-        </p>
-
         <progress
-          className="progress w-56 mt-4 bg-base-100 text-accent"
+          className="progress w-56 mt-4 bg-base-100 text-primary"
         ></progress>
       </div>
     </div>
