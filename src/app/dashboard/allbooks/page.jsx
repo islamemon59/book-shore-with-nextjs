@@ -3,6 +3,9 @@ import ActionButtons from "./Components/ActionButtons/ActionButtons";
 import Pagination from "@/app/books/Components/Pagination/Pagination";
 import SortByGenre from "@/app/books/Components/SortByGenre/SortByGenre";
 import SortOptions from "@/app/books/Components/SortBooks/SortBooks";
+import { getServerSession } from "next-auth";
+import UnauthorizedPage from "@/app/UnauthorizedPage";
+import { authOptions } from "@/lib/authOptions";
 
 export const generateMetadata = () => {
   return {
@@ -11,6 +14,10 @@ export const generateMetadata = () => {
 };
 
 export default async function BooksPage({ searchParams }) {
+    const session = await getServerSession(authOptions);
+  if (session?.user?.role !== "admin") {
+    return <UnauthorizedPage/>
+  }
   const search = searchParams?.search || "";
   const sort = searchParams?.sort || "newest";
   const genre = searchParams?.genre;
