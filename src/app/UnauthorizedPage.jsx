@@ -9,7 +9,6 @@ const UnauthorizedPage = () => {
           </span>
         </div>
 
-        {/* Heading */}
         <h1 className="text-3xl font-bold text-neutral mb-2">
           Access Denied
         </h1>
