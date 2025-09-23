@@ -16,7 +16,6 @@ const UnauthorizedPage = () => {
           You do not have permission to view this page.
         </p>
 
-        {/* Action Button */}
         <a href="/" className="btn btn-primary btn-wide rounded-full text-lg">
           Go to Home
         </a>
