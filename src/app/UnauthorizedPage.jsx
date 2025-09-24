@@ -2,7 +2,6 @@ const UnauthorizedPage = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-base-200 p-4">
       <div className="text-center p-8 bg-base-100 rounded-2xl shadow-2xl max-w-sm w-full">
-        {/* Lock Icon */}
         <div className="flex justify-center mb-6">
           <span className="text-6xl text-error" role="img" aria-label="Lock icon">
             🔒
