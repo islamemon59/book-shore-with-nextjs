@@ -41,7 +41,6 @@ export default function NotFoundPage() {
           >
             404
           </h1>
-          {/* Subheading */}
           <p className="mt-4 text-xl sm:text-2xl font-semibold opacity-90">
             Oops! The page you're looking for doesn't exist.
           </p>
