@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { BsCartPlusFill } from "react-icons/bs";
 import Swal from "sweetalert2";
 
@@ -29,25 +30,28 @@ const CartActionButton = ({ book }) => {
 
       if (res.ok && data.success) {
         setLoading(false);
-        Swal.fire({
-          icon: "success",
-          title: "Added to Cart 🛒",
-          text: `${book.title} has been added to your cart!`,
-          confirmButtonColor: "#3085d6",
-        });
+        // Swal.fire({
+        //   icon: "success",
+        //   title: "Added to Cart 🛒",
+        //   text: `${book.title} has been added to your cart!`,
+        //   confirmButtonColor: "#3085d6",
+        // });
+        toast.success("Added to Cart 🛒");
       } else {
-        Swal.fire({
-          icon: "error",
-          title: "Failed",
-          text: data.error || "Something went wrong",
-        });
+        toast.error(data.error || "Something went wrong");
+        // Swal.fire({
+        //   icon: "error",
+        //   title: "Failed",
+        //   text: data.error || "Something went wrong",
+        // });
       }
     } catch (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: error.message,
-      });
+      toast.error(error.message);
+      // Swal.fire({
+      //   icon: "error",
+      //   title: "Error",
+      //   text: error.message,
+      // });
     }
   };
 
