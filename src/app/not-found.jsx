@@ -28,7 +28,6 @@ export default function NotFoundPage() {
       className="flex flex-col items-center justify-center min-h-screen text-center p-4 transition-colors duration-500"
       style={{ backgroundColor: colorBase100 }}
     >
-      {/* Container for content, with a subtle backdrop */}
       <div
         className="relative flex flex-col items-center p-10 md:p-16 rounded-3xl shadow-2xl backdrop-blur-md bg-white/70"
         style={{ color: colorNeutral }}
