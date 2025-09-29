@@ -30,7 +30,7 @@ const CartButton = ({ book }) => {
           price: book.price,
           discount: book.discount,
           imageURL: book.imageURL,
-          quantity: 1,
+          quantity: quantity,
         }),
       });
 
