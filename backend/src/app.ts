@@ -2,9 +2,11 @@ import compression from "compression";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import express from "express";
-import rateLimit from "express-rate-limit";
-import helmet from "helmet";
+import { createRequire } from "node:module";
 import { toNodeHandler } from "better-auth/node";
+import type { RequestHandler } from "express";
+import type { Options as RateLimitOptions, RateLimitRequestHandler } from "express-rate-limit";
+import type { HelmetOptions } from "helmet";
 import { env } from "./config/env.js";
 import { auth } from "./lib/auth.js";
 import { logger } from "./lib/logger.js";
@@ -19,6 +21,10 @@ import { notificationsRouter } from "./modules/notifications/notifications.route
 import { ordersRouter } from "./modules/orders/orders.route.js";
 import { storeRouter } from "./modules/store/store.route.js";
 import { usersRouter } from "./modules/users/users.route.js";
+
+const require = createRequire(import.meta.url);
+const helmet = require("helmet") as (options?: Readonly<HelmetOptions>) => RequestHandler;
+const rateLimit = require("express-rate-limit") as (options?: Partial<RateLimitOptions>) => RateLimitRequestHandler;
 
 export const app = express();
 
