@@ -34,7 +34,7 @@ export function DashboardSidebar({ session }: { session: AppSession }) {
       <Link
         href="/"
         aria-label="Go to BookShore home page"
-        className="flex items-center gap-3 rounded-[calc(var(--radius)-0.25rem)] border bg-white/70 p-3 transition hover:-translate-y-0.5 hover:border-[var(--accent)] hover:bg-white hover:shadow-[var(--shadow-sm)]"
+        className="flex items-center gap-3 rounded-[calc(var(--radius)-0.25rem)] border bg-white/70 p-3 transition hover:-translate-y-0.5 hover:border-[var(--accent)] hover:bg-white hover:shadow-[var(--shadow-sm)] dark:bg-[rgba(255,255,255,0.06)] dark:hover:bg-[rgba(255,255,255,0.1)]"
       >
         <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[var(--primary)] text-[var(--accent)]">
           <BookOpenText className="h-5 w-5" />
@@ -46,7 +46,7 @@ export function DashboardSidebar({ session }: { session: AppSession }) {
       </Link>
       <div className="mt-6 eyebrow">Reader workspace</div>
       <div className="mt-3 font-serif text-3xl font-semibold">Dashboard</div>
-      <div className="mt-4 rounded-[calc(var(--radius)-0.25rem)] border bg-white/60 p-4">
+      <div className="mt-4 rounded-[calc(var(--radius)-0.25rem)] border bg-white/60 p-4 dark:bg-[rgba(255,255,255,0.06)]">
         <div className="font-semibold">{session?.user?.name}</div>
         <div className="mt-1 text-sm text-[var(--muted-foreground)]">{session?.user?.email}</div>
         <div className="mt-3 inline-flex rounded-full bg-[var(--primary)] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--primary-foreground)]">
@@ -64,7 +64,7 @@ export function DashboardSidebar({ session }: { session: AppSession }) {
               className={`flex items-center gap-3 rounded-[calc(var(--radius)-0.25rem)] px-4 py-3 text-sm font-medium ${
                 isActive
                   ? "bg-[var(--primary)] text-[var(--primary-foreground)] shadow-[var(--shadow-md)]"
-                  : "text-[var(--muted-foreground)] hover:bg-white/70 hover:text-[var(--primary)]"
+                  : "text-[var(--muted-foreground)] hover:bg-white/70 hover:text-[var(--primary)] dark:hover:bg-[rgba(255,255,255,0.08)]"
               }`}
             >
               <item.icon className="h-4 w-4" />

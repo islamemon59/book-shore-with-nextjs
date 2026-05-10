@@ -49,7 +49,7 @@ export function CatalogTable() {
       </div>
       <div className="mb-4 grid gap-3 lg:grid-cols-[1fr,16rem]">
         <Input placeholder="Search by title, author, or ISBN" value={search} onChange={(event) => setSearch(event.target.value)} />
-        <div className="rounded-[calc(var(--radius)-0.3rem)] border bg-white/60 px-4 py-3 text-sm text-[var(--muted-foreground)]">
+        <div className="rounded-[calc(var(--radius)-0.3rem)] border bg-white/60 px-4 py-3 text-sm text-[var(--muted-foreground)] dark:bg-[rgba(255,255,255,0.06)]">
           Catalog search keeps the overview fast and skim-friendly.
         </div>
       </div>
@@ -93,7 +93,7 @@ export function CatalogTable() {
                 <td className="py-4 font-semibold">{item.title}</td>
                 <td className="py-4">{item.author}</td>
                 <td className="py-4">
-                  <span className="rounded-full border bg-white/70 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em]">
+                  <span className="rounded-full border bg-white/70 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] dark:bg-[rgba(255,255,255,0.08)]">
                     {item.inventory} in stock
                   </span>
                 </td>

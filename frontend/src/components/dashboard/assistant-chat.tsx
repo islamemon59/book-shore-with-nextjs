@@ -55,12 +55,12 @@ export function AssistantChat() {
       </form>
       {mutation.data ? (
         <div className="mt-6 space-y-4">
-          <p className="rounded-[calc(var(--radius)-0.25rem)] border bg-white/60 p-4 text-sm leading-7">
+          <p className="rounded-[calc(var(--radius)-0.25rem)] border bg-white/60 p-4 text-sm leading-7 dark:bg-[rgba(255,255,255,0.06)]">
             {mutation.data.item.answer}
           </p>
           <div className="flex flex-wrap gap-2">
             {mutation.data.item.suggestions.map((suggestion) => (
-              <span key={suggestion} className="rounded-full border bg-white/60 px-3 py-1 text-xs text-[var(--muted-foreground)]">
+              <span key={suggestion} className="rounded-full border bg-white/60 px-3 py-1 text-xs text-[var(--muted-foreground)] dark:bg-[rgba(255,255,255,0.06)]">
                 {suggestion}
               </span>
             ))}

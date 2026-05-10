@@ -44,13 +44,17 @@ export function OrdersTable({ dashboardView = false }: { dashboardView?: boolean
       <div className="mb-4 flex flex-col gap-3 lg:flex-row">
         <Input placeholder="Search by order number" value={search} onChange={(event) => setSearch(event.target.value)} />
         <div className="grid gap-3 sm:grid-cols-2">
-          <select className="h-11 rounded-[calc(var(--radius)-0.28rem)] border bg-white/72 px-4 text-sm" value={status} onChange={(event) => setStatus(event.target.value)}>
+          <select
+            className="h-11 rounded-[calc(var(--radius)-0.28rem)] border bg-white/72 px-4 text-sm text-[var(--foreground)] dark:bg-[rgba(255,255,255,0.08)]"
+            value={status}
+            onChange={(event) => setStatus(event.target.value)}
+          >
             <option value="">Any status</option>
             <option value="PROCESSING">Pending</option>
             <option value="SHIPPED">Shipped</option>
             <option value="DELIVERED">Delivered</option>
           </select>
-          <div className="rounded-[calc(var(--radius)-0.3rem)] border bg-white/62 px-4 py-3 text-sm text-[var(--muted-foreground)]">
+          <div className="rounded-[calc(var(--radius)-0.3rem)] border bg-white/62 px-4 py-3 text-sm text-[var(--muted-foreground)] dark:bg-[rgba(255,255,255,0.06)]">
             Filter by lifecycle stage and search by order number.
           </div>
         </div>
@@ -74,7 +78,7 @@ export function OrdersTable({ dashboardView = false }: { dashboardView?: boolean
                 <td className="py-4 font-semibold">{item.orderNumber}</td>
                 <td className="py-4">{item.customer}</td>
                 <td className="py-4">
-                  <span className="rounded-full border bg-white/70 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em]">
+                  <span className="rounded-full border bg-white/70 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] dark:bg-[rgba(255,255,255,0.08)]">
                     {item.status}
                   </span>
                 </td>

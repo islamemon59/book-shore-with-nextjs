@@ -13,7 +13,7 @@ export function BookCard({ book }: { book: Book }) {
   const primaryCategory = book.categories[0];
 
   return (
-    <Card className="group h-full overflow-hidden border-[var(--border)] bg-white/88 shadow-[0_14px_42px_rgba(21,38,58,0.1)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_20px_56px_rgba(21,38,58,0.16)]">
+    <Card className="group flex h-full flex-col overflow-hidden border-[var(--border)] bg-white/88 shadow-[0_14px_42px_rgba(21,38,58,0.1)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_20px_56px_rgba(21,38,58,0.16)]">
       <div className="relative overflow-hidden">
         <div className="absolute inset-x-0 top-0 z-10 flex items-center justify-between gap-2 p-3">
           <div className="flex flex-wrap gap-1.5">

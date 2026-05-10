@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { BookOpenText, Menu, Search, ShieldCheck, ShoppingBag, Sparkles, WandSparkles } from "lucide-react";
+import { BookOpenText, Menu, Search, ShieldCheck, ShoppingBag, Sparkles } from "lucide-react";
 import { getServerSession } from "@/lib/auth";
-import { authFetch, serverFetch } from "@/lib/server-api";
-import type { CartResponse, Category } from "@/lib/types";
+import { authFetch } from "@/lib/server-api";
+import type { CartResponse } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -10,22 +10,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import { ThemeToggle } from "./theme-toggle";
 import { LiveNotificationBell } from "./live-notification-bell";
 import { UserMenu } from "./user-menu";
 
 export async function SiteHeader() {
   const session = await getServerSession();
-  let categoryResponse: { items: Category[] } = { items: [] };
   let cartCount = 0;
-
-  try {
-    categoryResponse = await serverFetch<{ items: Category[] }>("/api/books/categories", {
-      next: { revalidate: 3600, tags: ["categories"] },
-    });
-  } catch {
-    categoryResponse = { items: [] };
-  }
 
   if (session?.user) {
     try {
@@ -43,8 +35,6 @@ export async function SiteHeader() {
     { href: "/about", label: "About" },
     { href: "/support", label: "Support" },
   ];
-
-  const featuredCategories = categoryResponse.items.slice(0, 5);
 
   return (
     <header className="sticky top-0 z-40 border-b border-white/40 bg-[color:color-mix(in_srgb,var(--background)_72%,transparent)] backdrop-blur-2xl">
@@ -74,17 +64,22 @@ export async function SiteHeader() {
           </div>
         </Link>
 
-        <div className="hidden min-w-0 flex-1 items-center justify-center xl:flex">
-          <div className="flex w-full max-w-2xl items-center justify-between rounded-full border bg-white/72 px-4 py-3 shadow-[var(--shadow-sm)]">
-            <div className="flex items-center gap-3 text-sm text-[var(--muted-foreground)]">
-              <Search className="h-4 w-4 text-[var(--accent)]" />
-              Search books, authors, and reading moods
+        <form action="/explore" method="get" className="hidden min-w-0 flex-1 items-center justify-center xl:flex">
+          <div className="flex w-full max-w-[38rem] items-center gap-3 rounded-[2rem] border border-white/70 bg-white/88 p-2.5 shadow-[0_18px_42px_-28px_rgba(21,38,58,0.28)] ring-1 ring-white/60 backdrop-blur">
+            <div className="pointer-events-none flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[var(--accent)]/22 bg-[var(--secondary)]/72 text-[var(--accent)]">
+              <Search className="h-4 w-4" />
             </div>
-            <Button asChild size="sm" variant="secondary" className="rounded-full">
-              <Link href="/explore">Open catalog</Link>
+            <Input
+              type="search"
+              name="search"
+              placeholder="Search books, authors, and reading moods"
+              className="h-10 flex-1 border-0 bg-transparent px-0 text-sm shadow-none placeholder:text-[var(--muted-foreground)] focus-visible:ring-0"
+            />
+            <Button type="submit" size="sm" variant="secondary" className="min-w-[7.75rem] rounded-full px-5 shadow-[0_12px_28px_-18px_rgba(212,175,55,0.95)]">
+              Open catalog
             </Button>
           </div>
-        </div>
+        </form>
 
         <div className="hidden items-center gap-2 lg:flex">
           <ThemeToggle />
@@ -136,8 +131,8 @@ export async function SiteHeader() {
         </DropdownMenu>
       </div>
 
-      <div className="section-shell hidden gap-3 pb-4 lg:flex lg:flex-col xl:flex-row xl:items-center xl:justify-between xl:gap-6">
-        <nav className="scrollbar-none flex items-center gap-5 overflow-x-auto whitespace-nowrap pb-1 xl:shrink-0 xl:pb-0">
+      <div className="section-shell hidden justify-center pb-4 lg:flex">
+        <nav className="scrollbar-none flex items-center justify-center gap-5 overflow-x-auto whitespace-nowrap pb-1">
           {routes.map((route) => (
             <Link
               key={route.href}
@@ -153,22 +148,6 @@ export async function SiteHeader() {
             </Link>
           ) : null}
         </nav>
-
-        <div className="scrollbar-none flex items-center gap-2 overflow-x-auto whitespace-nowrap pb-1 xl:min-w-0 xl:flex-1 xl:justify-end xl:pb-0">
-          <div className="inline-flex shrink-0 items-center gap-2 rounded-full border bg-white/40 px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--foreground)]">
-            <WandSparkles className="h-3.5 w-3.5" />
-            Featured shelves
-          </div>
-          {featuredCategories.map((category) => (
-            <Link
-              key={category.id}
-              href={`/explore?category=${category.slug}`}
-              className="shrink-0 rounded-full border bg-white/40 px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--muted-foreground)] hover:border-[var(--accent)] hover:text-[var(--primary)]"
-            >
-              {category.name}
-            </Link>
-          ))}
-        </div>
       </div>
     </header>
   );

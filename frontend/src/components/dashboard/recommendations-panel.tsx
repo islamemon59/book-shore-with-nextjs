@@ -36,7 +36,7 @@ export function RecommendationsPanel() {
         <div className="mt-5 space-y-4">
           <p className="text-sm leading-7 text-[var(--muted-foreground)]">{mutation.data.item.summary}</p>
           {mutation.data.item.picks.map((pick) => (
-            <div key={pick.slug} className="rounded-[calc(var(--radius)-0.25rem)] border bg-white/60 p-4">
+            <div key={pick.slug} className="rounded-[calc(var(--radius)-0.25rem)] border bg-white/60 p-4 dark:bg-[rgba(255,255,255,0.06)]">
               <div className="flex items-center justify-between gap-4">
                 <Link href={`/books/${pick.slug}`} className="font-semibold capitalize hover:text-[var(--primary)]">
                   {pick.slug.replaceAll("-", " ")}
