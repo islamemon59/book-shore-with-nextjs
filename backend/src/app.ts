@@ -78,6 +78,15 @@ app.use(
 app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: false, limit: "1mb" }));
 
+app.get("/", (_req, res) => {
+  res.status(200).json({
+    success: true,
+    status: "ok",
+    service: "bookshore-backend",
+    health: "/api/health",
+  });
+});
+
 app.use("/api/health", healthRouter);
 app.use("/api/store", storeRouter);
 app.use("/api/books", booksRouter);
@@ -91,3 +100,5 @@ app.use("/api/ai", aiRouter);
 
 app.use(notFoundHandler);
 app.use(errorHandler);
+
+export default app;
