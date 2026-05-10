@@ -1,8 +1,8 @@
-import Image from "next/image";
 import Link from "next/link";
 import { CreditCard, HeartHandshake, ShieldCheck, Truck } from "lucide-react";
 import { notFound } from "next/navigation";
 import { BookDetailActions } from "@/components/books/book-detail-actions";
+import { BookMediaGallery } from "@/components/books/book-media-gallery";
 import { RelatedBooksCarousel } from "@/components/books/related-books-carousel";
 import { ReviewsPanel } from "@/components/books/reviews-panel";
 import { SiteShell } from "@/components/layout/site-shell";
@@ -72,32 +72,8 @@ export default async function BookDetailsPage({ params }: BookPageProps) {
   return (
     <SiteShell>
       <section className="section-shell py-10">
-        <div className="grid gap-8 lg:grid-cols-[minmax(14rem,0.3fr),1fr] lg:items-start">
-          <div className="card-surface soft-panel mx-auto w-full max-w-[19rem] overflow-hidden p-3 lg:sticky lg:top-32">
-            <div className="relative aspect-[4/5] overflow-hidden rounded-[calc(var(--radius)-0.35rem)] bg-[var(--secondary)]">
-              <Image
-                src={book.gallery[0]}
-                alt={book.title}
-                fill
-                className="object-cover transition duration-500 hover:scale-[1.03]"
-                sizes="(max-width: 1024px) 19rem, 19rem"
-                priority
-              />
-            </div>
-            <div className="mt-3 grid grid-cols-3 gap-2.5">
-              {book.gallery.slice(1, 4).map((image, index) => (
-                <div key={image + index} className="relative aspect-square overflow-hidden rounded-[0.8rem] border bg-white/66">
-                  <Image
-                    src={image}
-                    alt={`${book.title} preview ${index + 2}`}
-                    fill
-                    className="object-cover"
-                    sizes="7rem"
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
+        <div className="grid gap-8 xl:grid-cols-[minmax(22rem,28rem),minmax(0,1fr)] xl:items-start">
+          <BookMediaGallery title={book.title} coverImage={book.coverImage} gallery={book.gallery} />
 
           <div className="grid gap-5">
             <div className="card-surface hero-panel p-6 sm:p-7">
