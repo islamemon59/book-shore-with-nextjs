@@ -1,0 +1,57 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Production-ready Express backend for BookShore.",
+  "main": "dist/server.js",
+  "scripts": {
+    "dev": "cross-env NODE_OPTIONS=--disable-warning=DEP0205 tsx watch src/server.ts",
+    "build": "tsc --project tsconfig.json",
+    "start": "node dist/server.js",
+    "lint": "tsc --noEmit",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:seed": "cross-env NODE_OPTIONS=--disable-warning=DEP0205 tsx prisma/seed.ts"
+  },
+  "keywords": [
+    "express",
+    "prisma",
+    "better-auth",
+    "openai",
+    "bookstore"
+  ],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@better-auth/prisma-adapter": "^1.6.9",
+    "@prisma/client": "^6.19.3",
+    "better-auth": "^1.6.9",
+    "bullmq": "^5.76.6",
+    "compression": "^1.8.1",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.5.1",
+    "helmet": "^8.1.0",
+    "ioredis": "^5.10.1",
+    "node-cache": "^5.1.2",
+    "openai": "^6.37.0",
+    "pino": "^10.3.1",
+    "pino-http": "^11.0.0",
+    "pino-pretty": "^13.1.3",
+    "prisma": "^6.19.3",
+    "slugify": "^1.6.9",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/compression": "^1.8.1",
+    "@types/cookie-parser": "^1.4.10",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.6.2",
+    "cross-env": "^10.1.0",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.3"
+  }
+}
