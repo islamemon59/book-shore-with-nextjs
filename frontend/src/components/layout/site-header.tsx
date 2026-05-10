@@ -136,8 +136,8 @@ export async function SiteHeader() {
         </DropdownMenu>
       </div>
 
-      <div className="section-shell hidden gap-3 pb-4 lg:flex lg:flex-col">
-        <nav className="scrollbar-none flex items-center gap-5 overflow-x-auto whitespace-nowrap pb-1">
+      <div className="section-shell hidden gap-3 pb-4 lg:flex lg:flex-col xl:flex-row xl:items-center xl:justify-between xl:gap-6">
+        <nav className="scrollbar-none flex items-center gap-5 overflow-x-auto whitespace-nowrap pb-1 xl:shrink-0 xl:pb-0">
           {routes.map((route) => (
             <Link
               key={route.href}
@@ -154,7 +154,7 @@ export async function SiteHeader() {
           ) : null}
         </nav>
 
-        <div className="scrollbar-none flex items-center gap-2 overflow-x-auto whitespace-nowrap pb-1">
+        <div className="scrollbar-none flex items-center gap-2 overflow-x-auto whitespace-nowrap pb-1 xl:min-w-0 xl:flex-1 xl:justify-end xl:pb-0">
           <div className="inline-flex shrink-0 items-center gap-2 rounded-full border bg-white/40 px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--foreground)]">
             <WandSparkles className="h-3.5 w-3.5" />
             Featured shelves
