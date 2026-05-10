@@ -9,7 +9,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { appConfig } from "@/lib/config";
 import { useAppDispatch } from "@/lib/store";
 import { setUnreadNotifications } from "@/lib/store/ui-slice";
 import { formatDate } from "@/lib/utils";
@@ -27,7 +26,7 @@ export function LiveNotificationBell() {
   const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
-    const eventSource = new EventSource(`${appConfig.publicApiBaseUrl}/api/notifications/stream`, {
+    const eventSource = new EventSource("/api/proxy/api/notifications/stream", {
       withCredentials: true,
     });
 

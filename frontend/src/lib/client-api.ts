@@ -7,7 +7,7 @@ type RequestOptions = Omit<RequestInit, "body"> & {
 
 export const clientFetch = async <T>(path: string, options: RequestOptions = {}) => {
   const { body, target, ...init } = options;
-  const baseUrl = target === "same-origin" ? "" : appConfig.publicApiBaseUrl;
+  const baseUrl = target === "backend" ? appConfig.publicApiBaseUrl : "/api/proxy";
 
   const response = await fetch(`${baseUrl}${path}`, {
     ...init,
